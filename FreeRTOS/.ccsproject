@@ -8,6 +8,6 @@
 	<isElfFormat value="true"/>
 	<rts value="libc.a"/>
 	<createSlaveProjects value=""/>
-	<origin value="D:/Git_repo/ECEN-5013/Homework_5/AESD_HW5"/>
+	<origin value="D:/Git_repo/Smart-Lighting-Solution/FreeRTOS"/>
 	<isTargetManual value="true"/>
 </projectOptions>

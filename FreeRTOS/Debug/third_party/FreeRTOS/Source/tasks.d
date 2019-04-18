@@ -15,7 +15,7 @@ third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/ccs900/ccs/tool
 third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/machine/_types.h
 third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/machine/_stdint.h
 third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/sys/_stdint.h
-third_party/FreeRTOS/Source/tasks.obj: D:/CU//\ Boulder/AESD/CSS_workspace_v9/AESD_HW5/FreeRTOSConfig.h
+third_party/FreeRTOS/Source/tasks.obj: D:/CU//\ Boulder/AESD/CSS_workspace_v9/Smart-Lighting-Solution/FreeRTOSConfig.h
 third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/projdefs.h
 third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/portable.h
 third_party/FreeRTOS/Source/tasks.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -41,7 +41,7 @@ D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/inclu
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/machine/_types.h: 
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/machine/_stdint.h: 
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/sys/_stdint.h: 
-D:/CU//\ Boulder/AESD/CSS_workspace_v9/AESD_HW5/FreeRTOSConfig.h: 
+D:/CU//\ Boulder/AESD/CSS_workspace_v9/Smart-Lighting-Solution/FreeRTOSConfig.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/projdefs.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/portable.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/deprecated_definitions.h: 

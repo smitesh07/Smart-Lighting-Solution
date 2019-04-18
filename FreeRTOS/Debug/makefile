@@ -10,13 +10,14 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
-"./alert_task.obj" \
 "./freertos_demo.obj" \
-"./led_task.obj" \
+"./light_task.obj" \
 "./log_task.obj" \
+"./lum_task.obj" \
+"./motor_task.obj" \
 "./my_i2c.obj" \
+"./prox_task.obj" \
 "./startup_ccs.obj" \
-"./temp_task.obj" \
 "./third_party/FreeRTOS/Source/list.obj" \
 "./third_party/FreeRTOS/Source/queue.obj" \
 "./third_party/FreeRTOS/Source/tasks.obj" \
@@ -25,7 +26,7 @@ ORDERED_OBJS += \
 "./third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj" \
 "./utils/uartstdio.obj" \
 "./utils/ustdlib.obj" \
-"../hw5.cmd" \
+"../smart_lighting.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
 -l"D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/driverlib/ccs/Debug/driverlib.lib" \
@@ -143,34 +144,34 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-AESD_HW5.out \
+Smart-Lighting-Solution.out \
 
 EXE_OUTPUTS__QUOTED += \
-"AESD_HW5.out" \
+"Smart-Lighting-Solution.out" \
 
 BIN_OUTPUTS += \
-AESD_HW5.bin \
+Smart-Lighting-Solution.bin \
 
 BIN_OUTPUTS__QUOTED += \
-"AESD_HW5.bin" \
+"Smart-Lighting-Solution.bin" \
 
 
 # All Target
-all: AESD_HW5.out
+all: Smart-Lighting-Solution.out
 
 # Tool invocations
-AESD_HW5.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+Smart-Lighting-Solution.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 --abi=eabi -me -O2 --advice:power=all -g --gcc --define=ccs="ccs" --define=PART_TM4C1294NCPDT --define=TARGET_IS_TM4C129_RA1 --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --ual -z -m"blinky_ccs.map" --stack_size=512 --heap_size=0 -i"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib" -i"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="AESD_HW5_linkInfo.xml" --rom_model -o "AESD_HW5.out" $(ORDERED_OBJS)
+	"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 --abi=eabi -me -O2 --advice:power=all -g --gcc --define=ccs="ccs" --define=PART_TM4C1294NCPDT --define=TARGET_IS_TM4C129_RA1 --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --ual -z -m"blinky_ccs.map" --stack_size=512 --heap_size=0 -i"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib" -i"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="Smart-Lighting-Solution_linkInfo.xml" --rom_model -o "Smart-Lighting-Solution.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
 
-AESD_HW5.bin: $(EXE_OUTPUTS)
+Smart-Lighting-Solution.bin: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: ARM Hex Utility'
-	"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armhex"  -o "AESD_HW5.bin" $(EXE_OUTPUTS__QUOTED)
+	"D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armhex"  -o "Smart-Lighting-Solution.bin" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -178,14 +179,14 @@ AESD_HW5.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "alert_task.obj" "freertos_demo.obj" "led_task.obj" "log_task.obj" "my_i2c.obj" "startup_ccs.obj" "temp_task.obj" "third_party\FreeRTOS\Source\list.obj" "third_party\FreeRTOS\Source\queue.obj" "third_party\FreeRTOS\Source\tasks.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.obj" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.obj" "utils\uartstdio.obj" "utils\ustdlib.obj" 
-	-$(RM) "alert_task.d" "freertos_demo.d" "led_task.d" "log_task.d" "my_i2c.d" "startup_ccs.d" "temp_task.d" "third_party\FreeRTOS\Source\list.d" "third_party\FreeRTOS\Source\queue.d" "third_party\FreeRTOS\Source\tasks.d" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.d" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.d" "utils\uartstdio.d" "utils\ustdlib.d" 
+	-$(RM) "freertos_demo.obj" "light_task.obj" "log_task.obj" "lum_task.obj" "motor_task.obj" "my_i2c.obj" "prox_task.obj" "startup_ccs.obj" "third_party\FreeRTOS\Source\list.obj" "third_party\FreeRTOS\Source\queue.obj" "third_party\FreeRTOS\Source\tasks.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.obj" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.obj" "utils\uartstdio.obj" "utils\ustdlib.obj" 
+	-$(RM) "freertos_demo.d" "light_task.d" "log_task.d" "lum_task.d" "motor_task.d" "my_i2c.d" "prox_task.d" "startup_ccs.d" "third_party\FreeRTOS\Source\list.d" "third_party\FreeRTOS\Source\queue.d" "third_party\FreeRTOS\Source\tasks.d" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.d" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.d" "utils\uartstdio.d" "utils\ustdlib.d" 
 	-$(RM) "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
 post-build:
-	-"D:/Installed_Softwares/ti/ccs900/ccs/utils/tiobj2bin/tiobj2bin" "AESD_HW5.out" "AESD_HW5.bin" "D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armofd" "D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armhex" "D:/Installed_Softwares/ti/ccs900/ccs/utils/tiobj2bin/mkhex4bin"
+	-"D:/Installed_Softwares/ti/ccs900/ccs/utils/tiobj2bin/tiobj2bin" "Smart-Lighting-Solution.out" "Smart-Lighting-Solution.bin" "D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armofd" "D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armhex" "D:/Installed_Softwares/ti/ccs900/ccs/utils/tiobj2bin/mkhex4bin"
 	-@echo ' '
 
 .PHONY: all clean dependents

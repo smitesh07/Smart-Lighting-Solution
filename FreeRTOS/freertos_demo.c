@@ -37,10 +37,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "led_task.h"
-#include "temp_task.h"
+#include "prox_task.h"
+#include "lum_task.h"
+#include "light_task.h"
+#include "motor_task.h"
 #include "log_task.h"
-#include "alert_task.h"
 
 //*****************************************************************************
 //
@@ -182,7 +183,7 @@ main(void)
     //
     // Create the Queue task.
     //
-    if(LogTaskInit() != 0)
+    if(logTaskInit() != 0)
     {
 
         while(1)
@@ -191,9 +192,9 @@ main(void)
     }
 
     //
-    // Create the LED task.
+    // Create the Proxity sensor task.
     //
-    if(LEDTaskInit() != 0)
+    if(proxTaskInit() != 0)
     {
 
         while(1)
@@ -202,9 +203,9 @@ main(void)
     }
 
     //
-    // Create the Temperature task.
+    // Create the Luminosity sensor task.
     //
-    if(TempTaskInit() != 0)
+    if(lumTaskInit() != 0)
     {
 
         while(1)
@@ -213,9 +214,20 @@ main(void)
     }
 
     //
-    // Create the Alert task.
+    // Create the light task.
     //
-    if(AlertTaskInit() != 0)
+    if(lightTaskInit() != 0)
+    {
+
+        while(1)
+        {
+        }
+    }
+
+    //
+    // Create the motor task.
+    //
+    if(motorTaskInit() != 0)
     {
 
         while(1)

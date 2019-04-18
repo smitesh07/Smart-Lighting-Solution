@@ -25,7 +25,7 @@ freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_p
 freertos_demo.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stddef.h
 freertos_demo.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/_ti_config.h
 freertos_demo.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/linkage.h
-freertos_demo.obj: D:/CU//\ Boulder/AESD/CSS_workspace_v9/AESD_HW5/FreeRTOSConfig.h
+freertos_demo.obj: D:/CU//\ Boulder/AESD/CSS_workspace_v9/Smart-Lighting-Solution/FreeRTOSConfig.h
 freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/projdefs.h
 freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/portable.h
 freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -35,13 +35,12 @@ freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_p
 freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/list.h
 freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/semphr.h
 freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/queue.h
-freertos_demo.obj: ../led_task.h
-freertos_demo.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/string.h
-freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/inc/hw_ints.h
-freertos_demo.obj: D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/driverlib/interrupt.h
-freertos_demo.obj: ../temp_task.h
+freertos_demo.obj: ../prox_task.h
+freertos_demo.obj: D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdio.h
+freertos_demo.obj: ../lum_task.h
+freertos_demo.obj: ../light_task.h
+freertos_demo.obj: ../motor_task.h
 freertos_demo.obj: ../log_task.h
-freertos_demo.obj: ../alert_task.h
 
 ../freertos_demo.c: 
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdbool.h: 
@@ -68,7 +67,7 @@ D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Sourc
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stddef.h: 
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/_ti_config.h: 
 D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/linkage.h: 
-D:/CU//\ Boulder/AESD/CSS_workspace_v9/AESD_HW5/FreeRTOSConfig.h: 
+D:/CU//\ Boulder/AESD/CSS_workspace_v9/Smart-Lighting-Solution/FreeRTOSConfig.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/projdefs.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/portable.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/deprecated_definitions.h: 
@@ -78,10 +77,9 @@ D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Sourc
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/list.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/semphr.h: 
 D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/queue.h: 
-../led_task.h: 
-D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/string.h: 
-D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/inc/hw_ints.h: 
-D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/driverlib/interrupt.h: 
-../temp_task.h: 
+../prox_task.h: 
+D:/Installed_Softwares/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdio.h: 
+../lum_task.h: 
+../light_task.h: 
+../motor_task.h: 
 ../log_task.h: 
-../alert_task.h: 

@@ -6,60 +6,66 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CMD_SRCS += \
-../hw5.cmd 
+../smart_lighting.cmd 
 
 C_SRCS += \
-../alert_task.c \
 ../freertos_demo.c \
-../led_task.c \
+../light_task.c \
 ../log_task.c \
+../lum_task.c \
+../motor_task.c \
 ../my_i2c.c \
-../startup_ccs.c \
-../temp_task.c 
+../prox_task.c \
+../startup_ccs.c 
 
 C_DEPS += \
-./alert_task.d \
 ./freertos_demo.d \
-./led_task.d \
+./light_task.d \
 ./log_task.d \
+./lum_task.d \
+./motor_task.d \
 ./my_i2c.d \
-./startup_ccs.d \
-./temp_task.d 
+./prox_task.d \
+./startup_ccs.d 
 
 OBJS += \
-./alert_task.obj \
 ./freertos_demo.obj \
-./led_task.obj \
+./light_task.obj \
 ./log_task.obj \
+./lum_task.obj \
+./motor_task.obj \
 ./my_i2c.obj \
-./startup_ccs.obj \
-./temp_task.obj 
+./prox_task.obj \
+./startup_ccs.obj 
 
 OBJS__QUOTED += \
-"alert_task.obj" \
 "freertos_demo.obj" \
-"led_task.obj" \
+"light_task.obj" \
 "log_task.obj" \
+"lum_task.obj" \
+"motor_task.obj" \
 "my_i2c.obj" \
-"startup_ccs.obj" \
-"temp_task.obj" 
+"prox_task.obj" \
+"startup_ccs.obj" 
 
 C_DEPS__QUOTED += \
-"alert_task.d" \
 "freertos_demo.d" \
-"led_task.d" \
+"light_task.d" \
 "log_task.d" \
+"lum_task.d" \
+"motor_task.d" \
 "my_i2c.d" \
-"startup_ccs.d" \
-"temp_task.d" 
+"prox_task.d" \
+"startup_ccs.d" 
 
 C_SRCS__QUOTED += \
-"../alert_task.c" \
 "../freertos_demo.c" \
-"../led_task.c" \
+"../light_task.c" \
 "../log_task.c" \
+"../lum_task.c" \
+"../motor_task.c" \
 "../my_i2c.c" \
-"../startup_ccs.c" \
-"../temp_task.c" 
+"../prox_task.c" \
+"../startup_ccs.c" 
 
 
