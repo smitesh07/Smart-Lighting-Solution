@@ -1,4 +1,4 @@
-# AESD HW_5
+# Smart-Lighting-Solution
 
 To build the project on CCS, do the following steps:
 1) Go to Project properties
