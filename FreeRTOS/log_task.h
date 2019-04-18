@@ -1,8 +1,8 @@
 /*
- * log_task.h
+ * lum_task.h
  *
- *  Created on: Apr 8, 2019
- *      Author: modak
+ *  Created on: Apr 18, 2019
+ *      Author: Smitesh Modak and Ashish Tak
  */
 
 #ifndef LOG_TASK_H_
@@ -28,6 +28,11 @@
 //    }TASK_t;
 //}QUEUE_t;
 
+//*****************************************************************************
+//
+// Prototypes for the luminosity sensor task.
+//
+//*****************************************************************************
 uint32_t logTaskInit(void);
 //void enqueueForLog(QUEUE_t *);
 

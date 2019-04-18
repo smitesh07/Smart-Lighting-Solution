@@ -12,6 +12,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+
 //*****************************************************************************
 //
 // Prototypes for the luminosity sensor task.

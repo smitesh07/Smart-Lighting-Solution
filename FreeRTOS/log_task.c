@@ -1,7 +1,7 @@
 /*
- * log_task.c
+ * lum_task.h
  *
- *  Created on: Apr 8, 2019
+ *  Created on: Apr 18, 2019
  *      Author: Smitesh Modak and Ashish Tak
  */
 
@@ -28,7 +28,11 @@ QueueHandle_t xQueue;
 //    xQueueSend( xQueue, ( void * ) &pxMessage, ( TickType_t ) 0 );
 // }
 
- // Task to receive from the queue and log it.
+//*****************************************************************************
+//
+// Task to receive from the queue and log it.
+//
+//*****************************************************************************
  void DequeueFromLogTask( void *pvParameters )
   {
 //     QUEUE_t *pxRxedMessage;
