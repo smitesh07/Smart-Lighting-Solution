@@ -42,6 +42,7 @@
 #include "light_task.h"
 #include "motor_task.h"
 #include "log_task.h"
+#include "apds9301.h"
 
 //*****************************************************************************
 //
@@ -179,6 +180,16 @@ main(void)
     // Print demo introduction.
     //
 //    UARTprintf("\033[2J\033[HWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
+
+    I2CInit();
+
+    initLumSensor();
+
+    while(1) {
+        float lum = getLum();
+        UARTprintf("LUM VALUE: %d\n", lum);
+        vTaskDelay(2000);
+    }
 
     //
     // Create the Queue task.

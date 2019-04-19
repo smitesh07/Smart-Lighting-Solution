@@ -17,8 +17,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <unistd.h>
 #include <math.h>
+#include <stdbool.h>
+#include "utils/uartstdio.h"
+#include "my_i2c.h"
 
 /**
  * @brief Perform the initialization routine for the luminosity sensor

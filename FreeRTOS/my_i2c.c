@@ -6,9 +6,31 @@
  *      Reference: CU Boulder ECEN 5013 Class Demo
  */
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "my_i2c.h"
+
+void I2CInit(void) {
+    //
+    // Enable the I2C2 peripheral
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C2);
+
+    //
+    // Enable the GPIO port that is used for I2C.
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+
+    //
+    // Configure the I2CSDA and I2CSCL pins
+    //
+    GPIOPinConfigure(GPIO_PN4_I2C2SDA);
+    GPIOPinConfigure(GPIO_PN5_I2C2SCL);
+
+    //
+    // Select the I2C function for these pins.
+    //
+    GPIOPinTypeI2CSCL(GPIO_PORTN_BASE, GPIO_PIN_5);
+    GPIOPinTypeI2C(GPIO_PORTN_BASE, GPIO_PIN_4);
+}
 
 void I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data)
 {
@@ -129,7 +151,7 @@ uint8_t I2CGetByte(uint8_t target_address, uint8_t register_address)
 }
 
 
-void I2CGet2Bytes(uint8_t *buf, uint8_t target_address, uint8_t register_address)
+void I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf)
 {
    //
    // Tell the master module what address it will place on the bus when

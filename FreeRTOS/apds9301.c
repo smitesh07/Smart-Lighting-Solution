@@ -10,10 +10,6 @@
  */
 
 #include "apds9301.h"
-#include "i2c.h"
-#include "log.h"
-
-#define I2CPORT_USED I2C0
 
 //Command values to read/write byte and word respectively from the sensor
 #define CMD_RW_BYTE 0x80
@@ -54,63 +50,74 @@ int initLumSensor() {
 	uint8_t writeBuffer[2];
 	uint8_t readBuffer[2];
 	int ret;
-    LOG_INFO("Starting Built-in Startup tests for the Luminosity Sensor");
+	UARTprintf("Starting Built-in Startup tests for the Luminosity Sensor\n");
 
     //Write 00 to the control register to power down the device
     //Power it up again using 0x03 and read the value back
     writeBuffer[0]= CMD_RW_BYTE | CONTROL;
     writeBuffer[1]= 0x00;
-    ret = i2c_write_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
-    if (ret != 0) {
-    	LOG_ERROR("Powering down the device failed with error: %d", ret);
-    	return -1;
-    }
+//    ret = i2c_write_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
+    I2CSendByte(LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
+//    if (ret != 0) {
+//    	LOG_ERROR("Powering down the device failed with error: %d", ret);
+//    	return -1;
+//    }
 
     writeBuffer[1]= 0x03;
-    ret = i2c_write_word_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1], readBuffer);
-    if (ret != 1) {
-    	LOG_ERROR("Powering it again using 0x03 failed with error: %d", ret);
-    	return -1;
-    } else {
-    	LOG_INFO("APDS9301 Control register: 0x%x", readBuffer[0]);
-    }
+//    ret = i2c_write_word_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1], readBuffer);
+    I2CSendByte(LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
+    readBuffer[0] = I2CGetByte(LUM_SLAVE_ADDRESS, writeBuffer[0]);
+    UARTprintf("APDS9301 Control register: 0x%x\n", readBuffer[0]);
+//    if (ret != 1) {
+//    	LOG_ERROR("Powering it again using 0x03 failed with error: %d", ret);
+//    	return -1;
+//    } else {
+//    	LOG_INFO("APDS9301 Control register: 0x%x", readBuffer[0]);
+//    }
 
 
     //Read the identification register
     writeBuffer[0]= CMD_RW_BYTE | ID;
-    ret = i2c_write_byte_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, readBuffer, writeBuffer[0]);
-    if (ret != 1) {
-    	LOG_ERROR("Reading Identification register failed with error: %d", ret);
-    	return -1;
-    } else {
-    	LOG_INFO("Identification register: 0x%x", readBuffer[0]);
-    }
+//    ret = i2c_write_byte_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, readBuffer, writeBuffer[0]);
+    readBuffer[0] = I2CGetByte(LUM_SLAVE_ADDRESS, writeBuffer[0]);
+    UARTprintf("Identification register: 0x%x\n", readBuffer[0]);
+//    if (ret != 1) {
+//    	LOG_ERROR("Reading Identification register failed with error: %d", ret);
+//    	return -1;
+//    } else {
+//    	LOG_INFO("Identification register: 0x%x", readBuffer[0]);
+//    }
 
     //Read the timing register
     writeBuffer[0]= CMD_RW_BYTE | TIMING;
-    ret = i2c_write_byte_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, readBuffer, writeBuffer[0]);
-    if (ret != 1) {
-    	LOG_ERROR("Reading Timing register failed with error: %d", ret);
-    	return -1;
-    } else {
-    	LOG_INFO("Timing Register at startup: 0x%x", readBuffer[0]);
-    }
+//    ret = i2c_write_byte_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, readBuffer, writeBuffer[0]);
+    readBuffer[0] = I2CGetByte(LUM_SLAVE_ADDRESS, writeBuffer[0]);
+    UARTprintf("Timing Register at startup: 0x%x\n", readBuffer[0]);
+//    if (ret != 1) {
+//    	LOG_ERROR("Reading Timing register failed with error: %d", ret);
+//    	return -1;
+//    } else {
+//    	LOG_INFO("Timing Register at startup: 0x%x", readBuffer[0]);
+//    }
 
     //Set high gain and scale the integration time by 0.252 (101ms)
     writeBuffer[1]=0x11;
-    ret = i2c_write_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
-    if (ret != 0) {
-    	LOG_ERROR("Setting high gain and scaling the integration time failed with error: %d", ret);
-    	return -1;
-    }
+//    ret = i2c_write_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
+    I2CSendByte(LUM_SLAVE_ADDRESS, writeBuffer[0], writeBuffer[1]);
+//    if (ret != 0) {
+//    	LOG_ERROR("Setting high gain and scaling the integration time failed with error: %d", ret);
+//    	return -1;
+//    }
 
-    ret = i2c_write_byte_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, readBuffer, writeBuffer[0]);
-    if (ret != 1) {
-    	LOG_ERROR("Reading high gain and scaling the integration time failed with error: %d", ret);
-    	return -1;
-    } else {
-    	LOG_INFO("Timing Register after setting gain and integration scale: 0x%x", readBuffer[0]);
-    }
+//    ret = i2c_write_byte_read_byte(I2CPORT_USED, LUM_SLAVE_ADDRESS, readBuffer, writeBuffer[0]);
+    readBuffer[0] = I2CGetByte(LUM_SLAVE_ADDRESS, writeBuffer[0]);
+    UARTprintf("Timing Register after setting gain and integration scale: 0x%x\n", readBuffer[0]);
+//    if (ret != 1) {
+//    	LOG_ERROR("Reading high gain and scaling the integration time failed with error: %d", ret);
+//    	return -1;
+//    } else {
+//    	LOG_INFO("Timing Register after setting gain and integration scale: 0x%x", readBuffer[0]);
+//    }
 
 //    //Set the Interrupt Threshold Registers
 //    writeBuffer[0]= CMD_RW_WORD | THRESHLOWLOW;
@@ -171,22 +178,26 @@ float getLum() {
 
     //Read values from the 2 channels
     writeBuffer[0]= CMD_RW_WORD | DATA0LOW;
-    ret = i2c_write_byte_read_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], readBuffer);
-    if (ret != 2) {
-    	LOG_ERROR("Reading Channel 0 failed with error: %d", ret);
-    	return -1;
-    } else {
-    	ch0= readBuffer[0] + (uint16_t)(readBuffer[1]<<8); //Low byte is read from the sensor first
-    }
+//    ret = i2c_write_byte_read_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], readBuffer);
+    I2CGet2Bytes(LUM_SLAVE_ADDRESS, writeBuffer[0], readBuffer);
+    ch0= readBuffer[0] + (uint16_t)(readBuffer[1]<<8); //Low byte is read from the sensor first
+//    if (ret != 2) {
+//    	LOG_ERROR("Reading Channel 0 failed with error: %d", ret);
+//    	return -1;
+//    } else {
+//    	ch0= readBuffer[0] + (uint16_t)(readBuffer[1]<<8); //Low byte is read from the sensor first
+//    }
 
     writeBuffer[0]= CMD_RW_WORD | DATA1LOW;
-    ret = i2c_write_byte_read_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], readBuffer);
-    if (ret != 2) {
-    	LOG_ERROR("Reading Channel 1 failed with error: %d", ret);
-    	return -1;
-    } else {
-    	ch1= readBuffer[0] + (uint16_t)(readBuffer[1]<<8); //Low byte is read from the sensor first
-    }
+//    ret = i2c_write_byte_read_word(I2CPORT_USED, LUM_SLAVE_ADDRESS, writeBuffer[0], readBuffer);
+    I2CGet2Bytes(LUM_SLAVE_ADDRESS, writeBuffer[0], readBuffer);
+    ch1= readBuffer[0] + (uint16_t)(readBuffer[1]<<8); //Low byte is read from the sensor first
+//    if (ret != 2) {
+//    	LOG_ERROR("Reading Channel 1 failed with error: %d", ret);
+//    	return -1;
+//    } else {
+//    	ch1= readBuffer[0] + (uint16_t)(readBuffer[1]<<8); //Low byte is read from the sensor first
+//    }
 
     float lux, ratio;
     if (ch0 && ch1) {
@@ -210,43 +221,3 @@ float getLum() {
 
     return lux;
 }
-
-//float readTemp(void) {
-////    uint8_t buf[2] = {0};
-//    int16_t data;
-//	uint8_t buf[2] = {0};
-////    I2CGet2Bytes(buf, TEMP_SENSOR_ADDR, tempReg);
-////    i2c_write_read(I2CPORT_USED, 0x48, &buf, 0x00);
-//    i2c_write_byte_read_word(I2CPORT_USED, 0x48, buf, 0x00);
-////    uint8_t buffer[2] = {(buf && 0xff00), (buf && 0x00ff)};
-//
-//    // Bit 0 of second byte will always be 0 in 12-bit readings and 1 in 13-bit
-//    if(buf[1]&0x01) // 13 bit mode
-//    {
-//        // printf("Entered 13 bit mode");
-//        // Combine bytes to create a signed int
-//        data = ((buf[0]) << 5) | (buf[1] >> 3);
-//        // Temperature data can be + or -, if it should be negative,
-//        // convert 13 bit to 16 bit and use the 2s compliment.
-//        if(data > 0xFFF)
-//        {
-//            data |= 0xE000;
-//        }
-//    }
-//    else    // 12 bit mode
-//    {
-//        // Combine bytes to create a signed int
-//        data = ((buf[0]) << 4) | (buf[1] >> 4);
-//        // Temperature data can be + or -, if it should be negative,
-//        // convert 12 bit to 16 bit and use the 2s compliment.
-//        if(data > 0x7FF)
-//        {
-//            data |= 0xF000;
-//        }
-//    }
-//
-//
-//    float tempData = (float)data;
-//    return tempData * 0.0625;
-//}
-
