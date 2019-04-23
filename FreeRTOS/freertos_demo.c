@@ -181,37 +181,27 @@ main(void)
     //
 //    UARTprintf("\033[2J\033[HWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
 
-    I2CInit();
-
-    initLumSensor();
-
-    while(1) {
-        float lum = getLum();
-        UARTprintf("LUM VALUE: %d\n", lum);
-        vTaskDelay(2000);
-    }
-
     //
     // Create the Queue task.
     //
-    if(logTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
-    }
+//    if(logTaskInit() != 0)
+//    {
+//
+//        while(1)
+//        {
+//        }
+//    }
 
     //
     // Create the Proxity sensor task.
     //
-    if(proxTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
-    }
+//    if(proxTaskInit() != 0)
+//    {
+//
+//        while(1)
+//        {
+//        }
+//    }
 
     //
     // Create the Luminosity sensor task.
@@ -224,27 +214,27 @@ main(void)
         }
     }
 
-    //
-    // Create the light task.
-    //
-    if(lightTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
-    }
-
-    //
-    // Create the motor task.
-    //
-    if(motorTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
-    }
+//    //
+//    // Create the light task.
+//    //
+//    if(lightTaskInit() != 0)
+//    {
+//
+//        while(1)
+//        {
+//        }
+//    }
+//
+//    //
+//    // Create the motor task.
+//    //
+//    if(motorTaskInit() != 0)
+//    {
+//
+//        while(1)
+//        {
+//        }
+//    }
 
     //
     // Start the scheduler.  This should not return.

@@ -9,6 +9,7 @@ CMD_SRCS += \
 ../smart_lighting.cmd 
 
 C_SRCS += \
+../apds9301.c \
 ../freertos_demo.c \
 ../light_task.c \
 ../log_task.c \
@@ -19,6 +20,7 @@ C_SRCS += \
 ../startup_ccs.c 
 
 C_DEPS += \
+./apds9301.d \
 ./freertos_demo.d \
 ./light_task.d \
 ./log_task.d \
@@ -29,6 +31,7 @@ C_DEPS += \
 ./startup_ccs.d 
 
 OBJS += \
+./apds9301.obj \
 ./freertos_demo.obj \
 ./light_task.obj \
 ./log_task.obj \
@@ -39,6 +42,7 @@ OBJS += \
 ./startup_ccs.obj 
 
 OBJS__QUOTED += \
+"apds9301.obj" \
 "freertos_demo.obj" \
 "light_task.obj" \
 "log_task.obj" \
@@ -49,6 +53,7 @@ OBJS__QUOTED += \
 "startup_ccs.obj" 
 
 C_DEPS__QUOTED += \
+"apds9301.d" \
 "freertos_demo.d" \
 "light_task.d" \
 "log_task.d" \
@@ -59,6 +64,7 @@ C_DEPS__QUOTED += \
 "startup_ccs.d" 
 
 C_SRCS__QUOTED += \
+"../apds9301.c" \
 "../freertos_demo.c" \
 "../light_task.c" \
 "../log_task.c" \
