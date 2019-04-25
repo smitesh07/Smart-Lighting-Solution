@@ -195,13 +195,13 @@ main(void)
     //
     // Create the Proxity sensor task.
     //
-//    if(proxTaskInit() != 0)
-//    {
-//
-//        while(1)
-//        {
-//        }
-//    }
+    if(proxTaskInit() != 0)
+    {
+
+        while(1)
+        {
+        }
+    }
 
     //
     // Create the Luminosity sensor task.
