@@ -42,38 +42,10 @@ void Timer0IntHandler(void) {
 
 //*****************************************************************************
 //
-// Luminosity sensor task.
+// Initialize and enable timer to signal task after timeout.
 //
 //*****************************************************************************
-void lumTask( void *pvParameters ) {
-    int_fast32_t i32IntegerPart;
-    int_fast32_t i32FractionPart;
-    while(1) {
-        xSemaphoreTake(xSemaphoreLum, portMAX_DELAY);
-        float lum = getLum();
-        i32IntegerPart = (int32_t)lum;
-        i32FractionPart = (int32_t)(lum * 1000.0f);
-        i32FractionPart = i32FractionPart - (i32IntegerPart * 1000);
-        if(i32FractionPart < 0)
-        {
-            i32FractionPart *= -1;
-        }
-//        UARTprintf("\n[%d ms]       Temperature Value: %3d.%03d\n\n",
-//                   pxRxedMessage->TASK_t.temp_task_t.timeNow, i32IntegerPart, i32FractionPart);
-        UARTprintf("LUM VALUE: %3d.%03d\n", i32IntegerPart, i32FractionPart);
-//        vTaskDelay(pdMS_TO_TICKS(2000));
-    }
-}
-
-//*****************************************************************************
-//
-// Initializes the Luminosity sensor task.
-//
-//*****************************************************************************
-uint32_t lumTaskInit(void) {
-
-    I2CInit();
-
+static void enableTaskTimer(void) {
     //
     // Enable the Timer peripheral.
     //
@@ -100,11 +72,50 @@ uint32_t lumTaskInit(void) {
     // Enable processor interrupts.
     //
     ROM_IntMasterEnable();
+}
+
+//*****************************************************************************
+//
+// Luminosity sensor task.
+//
+//*****************************************************************************
+static void lumTask( void *pvParameters ) {
+    int_fast32_t i32IntegerPart;
+    int_fast32_t i32FractionPart;
+    while(1) {
+        xSemaphoreTake(xSemaphoreLum, portMAX_DELAY);
+        float lum = getLum();
+        i32IntegerPart = (int32_t)lum;
+        i32FractionPart = (int32_t)(lum * 1000.0f);
+        i32FractionPart = i32FractionPart - (i32IntegerPart * 1000);
+        if(i32FractionPart < 0)
+        {
+            i32FractionPart *= -1;
+        }
+//        UARTprintf("\n[%d ms]       Temperature Value: %3d.%03d\n\n",
+//                   pxRxedMessage->TASK_t.temp_task_t.timeNow, i32IntegerPart, i32FractionPart);
+        UARTprintf("LUM VALUE: %3d.%03d\n", i32IntegerPart, i32FractionPart);
+//        vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+}
+
+//*****************************************************************************
+//
+// Initializes the Luminosity sensor task.
+//
+//*****************************************************************************
+uint32_t lumTaskInit(void) {
+
+    // Initialize I2C
+    I2CInit();
+
+    // Enable task timer
+    enableTaskTimer();
 
     // Create a Semaphore to signal the task
     xSemaphoreLum = xSemaphoreCreateBinary();
 
-
+    // Initialize luminosity sensor
     initLumSensor();
 
     //
