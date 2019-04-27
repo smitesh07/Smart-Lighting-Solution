@@ -37,6 +37,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "alert_task.h"
 #include "prox_task.h"
 #include "lum_task.h"
 #include "light_task.h"
@@ -206,17 +207,17 @@ main(void)
     //
     // Create the Luminosity sensor task.
     //
-    if(lumTaskInit() != 0)
-    {
+//    if(lumTaskInit() != 0)
+//    {
+//
+//        while(1)
+//        {
+//        }
+//    }
 
-        while(1)
-        {
-        }
-    }
-
-//    //
-//    // Create the light task.
-//    //
+    //
+    // Create the light task.
+    //
 //    if(lightTaskInit() != 0)
 //    {
 //
@@ -224,10 +225,10 @@ main(void)
 //        {
 //        }
 //    }
-//
-//    //
-//    // Create the motor task.
-//    //
+
+    //
+    // Create the motor task.
+    //
 //    if(motorTaskInit() != 0)
 //    {
 //
@@ -235,6 +236,18 @@ main(void)
 //        {
 //        }
 //    }
+
+    //
+    // Create the alert task.
+    //
+    //    if(AlertTaskInit() != 0)
+    //    {
+    //
+    //        while(1)
+    //        {
+    //        }
+    //    }
+
 
     //
     // Start the scheduler.  This should not return.
