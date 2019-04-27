@@ -14,7 +14,7 @@
 //*****************************************************************************
 #define MOTORTASKSTACKSIZE        128         // Stack size in words
 
-#define PRIORITY_MOTOR_TASK       3
+#define PRIORITY_MOTOR_TASK       2
 
 //****************************************************************************
 //
