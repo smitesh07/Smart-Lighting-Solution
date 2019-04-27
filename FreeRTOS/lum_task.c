@@ -14,7 +14,7 @@
 //*****************************************************************************
 #define LUMTASKSTACKSIZE        128         // Stack size in words
 
-#define PRIORITY_LUM_TASK       3
+#define PRIORITY_LUM_TASK       4
 
 //****************************************************************************
 //
@@ -23,22 +23,19 @@
 //****************************************************************************
 uint32_t g_ui32SysClock;
 
-/* Semaphore to be used to wake up Temp task at 1 Hz */
+/* Semaphore to be used to wake up Lum task at 1 Hz */
 xSemaphoreHandle xSemaphoreLum;
 
-//*****************************************************************************
-//
-// Timer handler.
-//
-//*****************************************************************************
-void Timer0IntHandler(void) {
-    // Clear the timer interrupt.
-    TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-//    unsigned int currTime = xTaskGetTickCount();
-//    UARTprintf("Current handler: %d\n", pdTICKS_TO_MS(currTime));
-    UARTprintf("Interrupt Giving Lum Semaphore\n");
-    xSemaphoreGive(xSemaphoreLum);
-}
+/* Handle to the created timer. */
+ TimerHandle_t xLumTimer;
+
+/* Define a callback function that will be used by Lum timer
+ instance.  The callback function does nothing but pass on the semaphore to the waiting task */
+ void vLumTimerCallback( TimerHandle_t xTimer )
+ {
+     UARTprintf("Interrupt Giving Lum Semaphore\n");
+     xSemaphoreGive(xSemaphoreLum);
+ }
 
 //*****************************************************************************
 //
@@ -46,32 +43,43 @@ void Timer0IntHandler(void) {
 //
 //*****************************************************************************
 static void enableTaskTimer(void) {
-    //
-    // Enable the Timer peripheral.
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+    xLumTimer = xTimerCreate
+                       ( /* Just a text name, not used by the RTOS
+                         kernel. */
+                         "Timer",
+                         /* The timer period in ticks, must be
+                         greater than 0. */
+                         pdMS_TO_TICKS(1000),
+                         /* The timers will auto-reload themselves
+                         when they expire. */
+                         pdTRUE,
+                         /* The ID is used to store a count of the
+                         number of times the timer has expired, which
+                         is initialised to 0. */
+                         ( void * ) 0,
+                         /* Each timer calls the same callback when
+                         it expires. */
+                         vLumTimerCallback
+                       );
 
-    //
-    // Configure the two 32-bit periodic timer.
-    //
-    ROM_TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-    ROM_TimerLoadSet(TIMER0_BASE, TIMER_A,  g_ui32SysClock - 1);
+    if( xLumTimer == NULL )
+    {
+        /* The timer was not created. */
+        UARTprintf("Lum Timer not created \n");
+    }
+    else
+    {
+        UARTprintf("Lum Timer created \n");
+        /* Start the timer.  No block time is specified, and
+                 even if one was it would be ignored because the RTOS
+                 scheduler has not yet been started. */
+        if( xTimerStart( xLumTimer, 0 ) != pdPASS )
+        {
+            /* The timer could not be set into the Active
+                     state. */
+        }
+    }
 
-    //
-    // Setup the interrupts for the timer timeout.
-    //
-    ROM_IntEnable(INT_TIMER0A);
-    ROM_TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-
-    //
-    // Enable the timer.
-    //
-    ROM_TimerEnable(TIMER0_BASE, TIMER_A);
-
-    //
-    // Enable processor interrupts.
-    //
-    ROM_IntMasterEnable();
 }
 
 //*****************************************************************************
@@ -84,6 +92,7 @@ static void lumTask( void *pvParameters ) {
     int_fast32_t i32FractionPart;
     while(1) {
         xSemaphoreTake(xSemaphoreLum, portMAX_DELAY);
+        UARTprintf("Lum task initiated\n");
         float lum = getLum();
         i32IntegerPart = (int32_t)lum;
         i32FractionPart = (int32_t)(lum * 1000.0f);

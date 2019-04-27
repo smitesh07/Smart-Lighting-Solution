@@ -81,6 +81,11 @@
 #define configUSE_MUTEXES                   1
 #define configUSE_RECURSIVE_MUTEXES         1
 #define configCHECK_FOR_STACK_OVERFLOW      2
+#define configUSE_TIMERS                    1
+#define configSUPPORT_DYNAMIC_ALLOCATION    1
+#define configTIMER_TASK_PRIORITY           tskIDLE_PRIORITY + 4
+#define configTIMER_QUEUE_LENGTH            10
+#define configTIMER_TASK_STACK_DEPTH        128
 
 #define configMAX_PRIORITIES                16
 #define configMAX_CO_ROUTINE_PRIORITIES     ( 2 )
