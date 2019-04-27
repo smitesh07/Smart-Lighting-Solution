@@ -10,11 +10,12 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./alert_task.obj" \
 "./apds9301.obj" \
-"./freertos_demo.obj" \
 "./light_task.obj" \
 "./log_task.obj" \
 "./lum_task.obj" \
+"./main.obj" \
 "./motor_task.obj" \
 "./my_i2c.obj" \
 "./prox_task.obj" \
@@ -22,6 +23,7 @@ ORDERED_OBJS += \
 "./third_party/FreeRTOS/Source/list.obj" \
 "./third_party/FreeRTOS/Source/queue.obj" \
 "./third_party/FreeRTOS/Source/tasks.obj" \
+"./third_party/FreeRTOS/Source/timers.obj" \
 "./third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/port.obj" \
 "./third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.obj" \
 "./third_party/FreeRTOS/Source/portable/MemMang/heap_2.obj" \
@@ -180,8 +182,8 @@ Smart-Lighting-Solution.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "apds9301.obj" "freertos_demo.obj" "light_task.obj" "log_task.obj" "lum_task.obj" "motor_task.obj" "my_i2c.obj" "prox_task.obj" "startup_ccs.obj" "third_party\FreeRTOS\Source\list.obj" "third_party\FreeRTOS\Source\queue.obj" "third_party\FreeRTOS\Source\tasks.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.obj" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.obj" "utils\uartstdio.obj" "utils\ustdlib.obj" 
-	-$(RM) "apds9301.d" "freertos_demo.d" "light_task.d" "log_task.d" "lum_task.d" "motor_task.d" "my_i2c.d" "prox_task.d" "startup_ccs.d" "third_party\FreeRTOS\Source\list.d" "third_party\FreeRTOS\Source\queue.d" "third_party\FreeRTOS\Source\tasks.d" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.d" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.d" "utils\uartstdio.d" "utils\ustdlib.d" 
+	-$(RM) "alert_task.obj" "apds9301.obj" "light_task.obj" "log_task.obj" "lum_task.obj" "main.obj" "motor_task.obj" "my_i2c.obj" "prox_task.obj" "startup_ccs.obj" "third_party\FreeRTOS\Source\list.obj" "third_party\FreeRTOS\Source\queue.obj" "third_party\FreeRTOS\Source\tasks.obj" "third_party\FreeRTOS\Source\timers.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.obj" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.obj" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.obj" "utils\uartstdio.obj" "utils\ustdlib.obj" 
+	-$(RM) "alert_task.d" "apds9301.d" "light_task.d" "log_task.d" "lum_task.d" "main.d" "motor_task.d" "my_i2c.d" "prox_task.d" "startup_ccs.d" "third_party\FreeRTOS\Source\list.d" "third_party\FreeRTOS\Source\queue.d" "third_party\FreeRTOS\Source\tasks.d" "third_party\FreeRTOS\Source\timers.d" "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\port.d" "third_party\FreeRTOS\Source\portable\MemMang\heap_2.d" "utils\uartstdio.d" "utils\ustdlib.d" 
 	-$(RM) "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
