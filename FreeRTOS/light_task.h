@@ -9,6 +9,16 @@
 #define LIGHT_TASK_H_
 
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "inc/hw_ints.h"
+#include "inc/hw_timer.h"
+#include "inc/hw_gpio.h"
+#include "inc/hw_memmap.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/timer.h"
+#include "driverlib/gpio.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
