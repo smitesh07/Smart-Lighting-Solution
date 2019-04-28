@@ -29,8 +29,40 @@
 extern FILE *filePtr;
 extern bool controlHeartbeatFlag;
 
+// Macros defining the boundary conditions for light
+#define LOW_LIGHT   20.00
+#define HIGH_LIGHT  100.00
+
+// different states defining action to be perfomed by the Light Task on Tiva
+typedef enum {
+    LIGHT_INCREASE,
+    LIGHT_DECREASE,
+    LIGHT_NO_CHANGE,
+    LIGHT_MAINTAIN_DEFAULT
+}LIGHT_CONTROL;
+
+// different states defining action to be perfomed by the Motor Task on Tiva
+typedef enum {
+    MOTOR_OPEN,
+    MOTOR_CLOSE,
+    MOTOR_NO_CHANGE
+}MOTOR_CONTROL;
+
+// structure to be sent via UART to the tiva to perform desired action
+typedef struct {
+    LIGHT_CONTROL light;
+    MOTOR_CONTROL motor;
+}CONTROL_TX_t;
+
 //Prototypes
 
+/**
+ * @brief Get the Action to be performed of the light and motor task
+ * 
+ * @param lum       Luminosity value received 
+ * @return CONTROL_TX_t     Action structure to be passed via UART
+ */
+void getCurrentAction (void);
 
 /**
  * @brief Handler function / Entry point for the Control Loop thread
