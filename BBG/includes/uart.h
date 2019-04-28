@@ -32,6 +32,7 @@
 extern FILE *filePtr;
 extern bool uartHeartbeatFlag;
 
+extern CONTROL_TX_t dataOut;
 
 //Prototypes
 

@@ -70,7 +70,7 @@ typedef struct __attribute__((__packed__)){
  * @param lum       Luminosity value received 
  * @return CONTROL_TX_t     Action structure to be passed via UART
  */
-void getCurrentAction (void);
+void getCurrentAction (CONTROL_RX_t rxData);
 
 /**
  * @brief Handler function / Entry point for the Control Loop thread

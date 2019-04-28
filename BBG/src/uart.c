@@ -58,9 +58,10 @@ void uartInit (void) {
  * 
  */
 void UARTTransmissionTrigger (void) {
+    getCurrentAction (dataIn);
     //TODO: Integrate with the Control loop
-    dataOut.light=1;
-    dataOut.motor=0;  
+    // dataOut.light=1;
+    // dataOut.motor=0;  
     tcflush(fd,TCOFLUSH);
     write(fd, &dataOut, sizeof(CONTROL_TX_t));
 }
