@@ -207,24 +207,24 @@ main(void)
     //
     // Create the Luminosity sensor task.
     //
-//    if(lumTaskInit() != 0)
-//    {
-//
-//        while(1)
-//        {
-//        }
-//    }
+    if(lumTaskInit() != 0)
+    {
+
+        while(1)
+        {
+        }
+    }
 
     //
     // Create the light task.
     //
-//    if(lightTaskInit() != 0)
-//    {
-//
-//        while(1)
-//        {
-//        }
-//    }
+    if(lightTaskInit() != 0)
+    {
+
+        while(1)
+        {
+        }
+    }
 
     //
     // Create the motor task.
