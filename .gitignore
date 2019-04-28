@@ -1,0 +1,13 @@
+
+*.mk
+FreeRTOS/.launches/Smart-Lighting-Solution.launch
+FreeRTOS/Debug/ccsObjs.opt
+FreeRTOS/Debug/makefile
+FreeRTOS/Debug/Smart-Lighting-Solution_linkInfo.xml
+FreeRTOS/Debug/subdir_rules.mk
+FreeRTOS/Debug/subdir_vars.mk
+FreeRTOS/Debug/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/subdir_rules.mk
+FreeRTOS/Debug/third_party/FreeRTOS/Source/portable/MemMang/subdir_rules.mk
+FreeRTOS/Debug/third_party/FreeRTOS/Source/subdir_rules.mk
+FreeRTOS/Debug/third_party/FreeRTOS/Source/subdir_vars.mk
+FreeRTOS/Debug/utils/subdir_rules.mk

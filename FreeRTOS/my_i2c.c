@@ -8,6 +8,13 @@
 
 #include "my_i2c.h"
 
+//****************************************************************************
+//
+// System clock rate in Hz.
+//
+//****************************************************************************
+uint32_t g_ui32SysClock;
+
 void I2CInit(void) {
     //
     // Enable the I2C2 peripheral
@@ -30,6 +37,16 @@ void I2CInit(void) {
     //
     GPIOPinTypeI2CSCL(GPIO_PORTN_BASE, GPIO_PIN_5);
     GPIOPinTypeI2C(GPIO_PORTN_BASE, GPIO_PIN_4);
+
+    //
+    // Enable and initialize the I2C2 master module.
+    //
+    I2CMasterInitExpClk(I2C2_BASE, g_ui32SysClock, false);
+
+    //
+    // Enable processor interrupts.
+    //
+    ROM_IntMasterEnable();
 }
 
 void I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data)

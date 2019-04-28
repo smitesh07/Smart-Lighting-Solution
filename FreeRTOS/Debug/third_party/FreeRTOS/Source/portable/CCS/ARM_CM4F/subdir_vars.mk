@@ -6,10 +6,10 @@ SHELL = cmd.exe
 
 # Add inputs and outputs from these tool invocations to the build variables 
 ASM_SRCS += \
-D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm 
+C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm 
 
 C_SRCS += \
-D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c 
+C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c 
 
 C_DEPS += \
 ./third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/port.d 
@@ -32,9 +32,9 @@ ASM_DEPS__QUOTED += \
 "third_party\FreeRTOS\Source\portable\CCS\ARM_CM4F\portasm.d" 
 
 C_SRCS__QUOTED += \
-"D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c" 
+"C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/port.c" 
 
 ASM_SRCS__QUOTED += \
-"D:/Installed_Softwares/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm" 
+"C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/portasm.asm" 
 
 
