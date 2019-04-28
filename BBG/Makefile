@@ -26,7 +26,7 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
 ifeq ($(PLATFORM),BBG)
-	scp -r project1 root@10.0.0.67:/Project2/Test/
+	scp -r project2 root@10.0.0.65:/Project2/
 endif
 
 $(TARGET): $(OBJS)

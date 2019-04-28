@@ -111,6 +111,7 @@ int main(int argc, char *argv[])
       strcat(logFile,fileName);
     } 
     else {
+        printf("\nNo Log file name provided. Will use the default 'log.txt\n");
         strcpy(logFile, "log.txt");
     }
 

@@ -22,18 +22,21 @@
 #include <sys/time.h>
 #include <sys/syscall.h>
 #include <time.h>
+#include <termios.h>
+#include <fcntl.h>
 #include <signal.h>
 #include "timer.h"
 #include "queue.h"
+#include "controlLoop.h"
 
 extern FILE *filePtr;
 extern bool uartHeartbeatFlag;
 
+
 //Prototypes
 
-
 /**
- * @brief Handler function / Entry point for the uart thread
+ * @brief Handler function / Entry point for the UART communication thread
  * 
  */
 void *uartHandler(void *arg);

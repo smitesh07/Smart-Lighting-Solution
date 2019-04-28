@@ -48,11 +48,19 @@ typedef enum {
     MOTOR_NO_CHANGE
 }MOTOR_CONTROL;
 
-// structure to be sent via UART to the tiva to perform desired action
-typedef struct {
-    LIGHT_CONTROL light;
-    MOTOR_CONTROL motor;
+// structure to be sent via UART to the Tiva board to perform desired action
+typedef struct __attribute__((__packed__)){
+    uint8_t light;
+    uint8_t motor;
 }CONTROL_TX_t;
+
+//structure to be received via UART from the Tiva board regarding status of peripherals
+typedef struct __attribute__((__packed__)){
+    float lux;
+    uint8_t proximity;
+    uint8_t sensorStatus;
+    uint8_t blindsStatus;
+} CONTROL_RX_t;
 
 //Prototypes
 
