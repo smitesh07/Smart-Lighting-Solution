@@ -19,7 +19,6 @@
 #include <string.h>
 #include <mqueue.h>
 #include "log.h"
-#include "controlLoop.h"
 
 typedef enum {
   CONTROL_TX,

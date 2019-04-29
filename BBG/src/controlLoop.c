@@ -54,7 +54,7 @@ void *controlLoopHandler(void *arg) {
       controlHeartbeatFlag=true;
       //Main sets this global flag on receiving the SIGINT signal from user
       if (terminateSignal) {
-        enQueueForLog(WARN, "Termination signal received to Control Loop thread.", 0);
+        enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to Control Loop thread.", NULL, NULL);
         deQueueFromLog();
         fflush(filePtr);
         break;

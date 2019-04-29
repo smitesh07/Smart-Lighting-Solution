@@ -33,7 +33,7 @@ void initQueue(char *queueName) {
     mqdes = mq_open (queueName, O_RDWR | O_CREAT, 0666, &attr);
     if (mqdes <0) {
         perror("mq_open()");
-        enQueueForLog(ERROR, "Failed to open message queue", 0);
+        enQueueForLog(PLAIN_MSG, ERROR, "Failed to open message queue", NULL, NULL);
     }
 }
 
@@ -53,17 +53,19 @@ void enQueueForLog(MESSAGE_TYPE msgtype, LOG_LEVEL_t level, char *msg, CONTROL_R
     (prioQueue->logQueue).level = level;
     strcpy((prioQueue->logQueue).msg, msg);
 
-    // if (msgtype == PLAIN_MSG) {
-    //     (prioQueue->logQueue).controlRx = 0;
-    //     (prioQueue->logQueue).controlTx = 0;
-    // } else 
     if (msgtype == CONTROL_RX) {
+        if (rxControlLog == NULL) {
+            enQueueForLog(PLAIN_MSG, ERROR, "Enqueue function received NULL pointer for CONTROL_RX_t Struct", NULL, NULL);
+        }
         rxControl.lux = rxControlLog->lux;
         rxControl.blindsStatus = rxControlLog->proximity;
         rxControl.sensorStatus = rxControlLog->sensorStatus;
         rxControl.blindsStatus = rxControlLog->blindsStatus;
         (prioQueue->logQueue).controlRx = rxControl;
     } else if (msgtype == CONTROL_TX) {
+        if (txControlLog == NULL) {
+            enQueueForLog(PLAIN_MSG, ERROR, "Enqueue function received NULL pointer for CONTROL_TX_t Struct", NULL, NULL);
+        }
         txControl.light = txControlLog->light;
         txControl.motor = txControlLog->motor;
         (prioQueue->logQueue).controlTx = txControl;
@@ -71,7 +73,7 @@ void enQueueForLog(MESSAGE_TYPE msgtype, LOG_LEVEL_t level, char *msg, CONTROL_R
        
     if (mq_send (mqdes, (const char *)prioQueue, sizeof(QUEUE_t), prio)< 0) {
         perror ("mq_send()");
-        enQueueForLog(ERROR, "Failed writing to message queue",0);
+        enQueueForLog(PLAIN_MSG, ERROR, "Failed writing to message queue", NULL, NULL);
     }
 
     free(prioQueue);   
@@ -102,7 +104,7 @@ void deQueueFromLog(void) {
                     LOG_INFO("%s",(prioQueue->logQueue).msg);
                 else if ((prioQueue->logQueue).level == DEBUG)
                     LOG_DEBUG("%s",(prioQueue->logQueue).msg);
-            } else if (prioQueue->mtype = CONTROL_TX) {
+            } else if (prioQueue->mtype == CONTROL_RX) {
                 if((prioQueue->logQueue).level == ERROR)
                     LOG_ERROR("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
                     (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
@@ -128,7 +130,7 @@ void deQueueFromLog(void) {
                     (prioQueue->logQueue).controlRx.sensorStatus,
                     (prioQueue->logQueue).controlRx.blindsStatus);
 
-            } else if (prioQueue->mtype = CONTROL_RX) {
+            } else if (prioQueue->mtype == CONTROL_TX) {
                 if((prioQueue->logQueue).level == ERROR)
                     LOG_ERROR("%s Light control: %d   Motor control: %d",
                     (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,

@@ -19,9 +19,8 @@
 #include <time.h>
 #include <mqueue.h>
 #include <signal.h>
-#include "log.h"
-#include "timer.h"
 #include "queue.h"
+#include "timer.h"
 #include "uart.h"
 #include "controlLoop.h"
 
@@ -44,18 +43,14 @@ void heartbeatTimerHandler () {
     if (uartHeartbeatFlag)
         uartHeartbeatFlag = false;
     else {
-        enQueueForLog(ERROR, "Uart thread is DEAD!! Issuing pthread_cancel().. ", 0);
-        deQueueFromLog();
-        fflush(filePtr);
+        enQueueForLog(PLAIN_MSG, ERROR, "Uart thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
         pthread_cancel(uart);    
     }
 
     if (controlHeartbeatFlag)
         controlHeartbeatFlag = false;
     else {
-        enQueueForLog(ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", 0);
-        deQueueFromLog();
-        fflush(filePtr);
+        enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
         pthread_cancel(controlLoop);    
     }
     
@@ -63,9 +58,7 @@ void heartbeatTimerHandler () {
     if (logHeartbeatFlag)
         logHeartbeatFlag=false;
     else {
-        enQueueForLog(ERROR, "Logger thread is DEAD!! Issuing pthread_cancel().. ", 0);
-        deQueueFromLog();
-        fflush(filePtr);
+        enQueueForLog(PLAIN_MSG, ERROR, "Logger thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
         pthread_cancel(logger);
     }
 
@@ -85,10 +78,6 @@ void sigHandler (int signal) {
             //Since the flag is written to only once in the lifetime of
             //the program, no synchronization is required
 			terminateSignal=true;
-            //Explictly send a signal to the External Socket handling thread,
-            //since its blocking on external requests and does not periodically
-            //monitor any termination signal / flag
-            // pthread_kill(externSocket, SIGUSR1);
 			break;
 		default:
 			break;
@@ -119,6 +108,25 @@ int main(int argc, char *argv[])
     logInit(logFile);
     initQueue(path);
 
+/*********************** Test ************************************/
+    CONTROL_RX_t rxControl;
+    CONTROL_TX_t txControl;
+
+    rxControl.blindsStatus = 4;
+    rxControl.lux = 1.00;
+    rxControl.proximity = 2;
+    rxControl.sensorStatus = 3;
+
+    txControl.light = 5;
+    txControl.motor = 6;
+
+    enQueueForLog(PLAIN_MSG, INFO, "HELLO WORLD", NULL, NULL);
+    enQueueForLog(PLAIN_MSG, ERROR, "HELLO WORLD", NULL, NULL);
+    enQueueForLog(PLAIN_MSG, WARN, "HELLO WORLD", NULL, NULL);
+    enQueueForLog(CONTROL_RX, INFO, "CONTROL RX", &rxControl, NULL);
+    enQueueForLog(CONTROL_TX, INFO, "CONTROL TX", NULL, &txControl);
+/*****************************************************************/
+
     //Register the signal handler for the termination signal (SIGINT) from the user
     struct sigaction sa;
 	sigemptyset (&sa.sa_mask);
@@ -136,7 +144,7 @@ int main(int argc, char *argv[])
     pthread_join(controlLoop, NULL);
     pthread_join(logger, NULL);
 
-    enQueueForLog(WARN, "Main thread terminating..", 0);
+    enQueueForLog(PLAIN_MSG, WARN, "Main thread terminating..", NULL, NULL);
     deQueueFromLog();
     fflush(filePtr);
     logFlush();

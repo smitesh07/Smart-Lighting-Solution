@@ -37,8 +37,10 @@ void uartInit (void) {
     char buf[] = UART_DEV_FILE;
     struct termios uart1;
 	  fd = open(buf, O_RDWR | O_NOCTTY );
-	  if(fd < 0) printf("port failed to open\n");
-
+	  if(fd < 0) {
+        printf("port failed to open\n");
+        enQueueForLog(PLAIN_MSG, ERROR, "Port failed to open", NULL, NULL);
+      }
     bzero(&uart1,sizeof(uart1));
 
     //Set the UART parameters: Baud 115200, 8-bit mode, Ignore parity
@@ -92,8 +94,10 @@ void *uartHandler(void *arg) {
 
     //Create and Initialize the semaphore to synchronize access to the data structure received from UART
     sem_uart_rx_data = sem_open(SEM_UART_RX_DATA, O_RDWR | O_CREAT, 0666, 1);
-    if (sem_uart_rx_data == SEM_FAILED || sem_uart_rx_data == SEM_FAILED)
+    if (sem_uart_rx_data == SEM_FAILED || sem_uart_rx_data == SEM_FAILED) {
         perror("sem_open failed\n");
+        enQueueForLog(PLAIN_MSG, ERROR, "sem_open failed open", NULL, NULL);
+      }
 
     timer_t uartTxTimerid, uartRxTimerid;
 
@@ -107,7 +111,7 @@ void *uartHandler(void *arg) {
       uartHeartbeatFlag=true;
       //Main sets this global flag on receiving the SIGINT signal from user
       if (terminateSignal) {
-        enQueueForLog(WARN, "Termination signal received to UART thread.", 0);
+        enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to UART thread.", NULL, NULL);
         deQueueFromLog();
         fflush(filePtr);
         break;

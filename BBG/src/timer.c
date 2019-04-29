@@ -10,6 +10,7 @@
  */
 
 #include "timer.h"
+#include "queue.h"
 
 
 timer_t initTimer(uint64_t nanosec, void (*callbackFunction)() ) {
@@ -31,6 +32,7 @@ timer_t initTimer(uint64_t nanosec, void (*callbackFunction)() ) {
 	}
 	else {
 		perror("\nUnable to create more timers");
+		enQueueForLog(PLAIN_MSG, ERROR, "Unable to create more timers", NULL, NULL);
 		return (timer_t)-1;
 	}
 
@@ -43,6 +45,7 @@ timer_t initTimer(uint64_t nanosec, void (*callbackFunction)() ) {
 	if(timer_create(CLOCK_REALTIME, &sev, &timerid)) {
 		perror("\ntimer_create");
 		fflush(stdout);
+		enQueueForLog(PLAIN_MSG, ERROR, "timer_create", NULL, NULL);
 		return (timer_t)-1;
 	}
 	
@@ -54,6 +57,7 @@ timer_t initTimer(uint64_t nanosec, void (*callbackFunction)() ) {
 	if(timer_settime(timerid, 0, &its, NULL)) {
 		perror("timer_settime");
 		fflush(stdout);
+		enQueueForLog(PLAIN_MSG, ERROR, "timer_settime", NULL, NULL);
 		return (timer_t)-1;
 	}
 

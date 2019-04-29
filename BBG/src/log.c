@@ -12,6 +12,7 @@
 #include "log.h"
 #include "queue.h"
 
+
 FILE *filePtr;
 bool logHeartbeatFlag;
 
@@ -45,7 +46,7 @@ void *loggerHandler(void *arg) {
       logHeartbeatFlag=true;
       //Main sets this global flag on receiving the SIGINT signal from user
       if (terminateSignal) {
-        enQueueForLog(WARN, "Termination signal received to Logger thread.", 0);
+        enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to Logger thread.", NULL, NULL);
         break;
       }
       sleep(1);
