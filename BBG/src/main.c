@@ -47,12 +47,12 @@ void heartbeatTimerHandler () {
         pthread_cancel(uart);    
     }
 
-    if (controlHeartbeatFlag)
-        controlHeartbeatFlag = false;
-    else {
-        enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
-        pthread_cancel(controlLoop);    
-    }
+    // if (controlHeartbeatFlag)
+    //     controlHeartbeatFlag = false;
+    // else {
+    //     enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
+    //     pthread_cancel(controlLoop);    
+    // }
     
 
     if (logHeartbeatFlag)
@@ -133,6 +133,8 @@ int main(int argc, char *argv[])
 	sa.sa_handler=&sigHandler;
 	sa.sa_flags=0;
 	sigaction(SIGINT, &sa, NULL);
+
+    printf("\nMain spawned. Creating other threads..");
 
     pthread_create (&uart, NULL, uartHandler, NULL);
     // pthread_create (&controlLoop, NULL, controlLoopHandler, NULL);

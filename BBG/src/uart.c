@@ -31,6 +31,9 @@ bool uartHeartbeatFlag;
 //Heartbeat flag to indicate UART connection 
 bool uartConnectedHeartBeatFlag=false;
 
+//Flag to detect every time the remote node goes in and out of service
+bool newConnection=false;
+
 int fd;
 CONTROL_RX_t dataIn;
 CONTROL_TX_t dataOut;
@@ -40,14 +43,15 @@ CONTROL_TX_t dataOut;
  * @brief Function to perform the UART Initialization routine
  * 
  */
-void uartInit (void) {
+int uartInit (void) {
     char buf[] = UART_DEV_FILE;
     struct termios uart1;
 	  fd = open(buf, O_RDWR | O_NOCTTY );
 	  if(fd < 0) {
-        printf("port failed to open\n");
-        enQueueForLog(PLAIN_MSG, ERROR, "Port failed to open", NULL, NULL);
-      }
+        printf("Failed to open the port for UART\n");
+        enQueueForLog(PLAIN_MSG, ERROR, "Failed to open the port for UART", NULL, NULL);
+        return -1;
+    }
     bzero(&uart1,sizeof(uart1));
 
     //Set the UART parameters: Baud 115200, 8-bit mode, Ignore parity
@@ -63,6 +67,8 @@ void uartInit (void) {
     //clean the line and set the attributes
     tcflush(fd,TCIOFLUSH);
     tcsetattr(fd,TCSANOW,&uart1);
+
+    return 0;
 }
 
 
@@ -74,6 +80,7 @@ void UARTTransmissionTrigger (void) {
     //Pass the latest UART data received to the control function 
     sem_wait(sem_uart_rx_data);
     getCurrentAction (dataIn);
+    //TODO: Log the DataOut structure to be sent
     sem_post(sem_uart_rx_data);
     tcflush(fd,TCOFLUSH);
     //getCurrentAction() updates the value of the global var dataOut
@@ -90,25 +97,38 @@ void UARTTransmissionTrigger (void) {
 void UARTReceptionTrigger (void) {
     sem_wait(sem_uart_rx_data);
     read(fd, &dataIn, sizeof(CONTROL_RX_t));
-    if (uartConnectedHeartBeatFlag==false) {
+    if (newConnection==false) {
+      newConnection=true;
       printf("\nUART Connection to the remote node is now established");
     }
     uartConnectedHeartBeatFlag = true;
+    if (dataIn.sensorStatus) {
+      printf("\n\nReceived data from the remote node.");
+      printf("\nLuminosity: %f", dataIn.lux);
+      printf("\nProximity: %s", dataIn.proximity ? "Detected" : "Not detected");
+      printf("\nBlinds: %s", dataIn.blindsStatus ? "Closed" : "Open" );
+    }
     sem_post(sem_uart_rx_data);
-    printf("\nRecd: %f\t%d\t%d\t%d",dataIn.lux, dataIn.proximity, dataIn.sensorStatus, dataIn.blindsStatus);
     tcflush(fd,TCIFLUSH);
 }
 
 
 void *uartHandler(void *arg) {
-    uartInit();
+    printf("\nUART thread spawned..");
+
+    if (uartInit()!=0) {
+      printf("\nUART thread terminating..");
+      return;
+    }
 
     //Create and Initialize the semaphore to synchronize access to the data structure received from UART
     sem_uart_rx_data = sem_open(SEM_UART_RX_DATA, O_RDWR | O_CREAT, 0666, 1);
-    if (sem_uart_rx_data == SEM_FAILED || sem_uart_rx_data == SEM_FAILED) {
+    if (sem_uart_rx_data == SEM_FAILED) {
         perror("sem_open failed\n");
-        enQueueForLog(PLAIN_MSG, ERROR, "sem_open failed open", NULL, NULL);
-      }
+        enQueueForLog(PLAIN_MSG, ERROR, "sem_open failed.", NULL, NULL);
+        printf("\nUART thread terminating..");
+        return;
+    }
 
     timer_t uartTxTimerid, uartRxTimerid;
 
@@ -120,7 +140,7 @@ void *uartHandler(void *arg) {
     while (1) {
       deQueueFromLog();
       fflush(filePtr);
-      //Periodically set the heartbeat flag to be checked by main()
+      //Periodically set the thread's heartbeat flag to be checked by main()
       uartHeartbeatFlag=true;
 
       //Check the UART connection to the Tiva board
@@ -131,6 +151,7 @@ void *uartHandler(void *arg) {
           uartConnectedHeartBeatFlag=false;
         }
         else{
+          newConnection=false;
           printf("\nUART Connection to the remote node is lost.");
           printf("\nInto DEGRADED mode II of operation.");
           printf("\nNo commands would be sent unless further sensor data is received.");

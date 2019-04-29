@@ -19,6 +19,7 @@ extern CONTROL_TX_t dataOut;
 
 
 void getCurrentAction (CONTROL_RX_t rxData) {
+
   if (rxData.sensorStatus == SENSOR_NOT_WORKING) {
     printf("\nSensor on the Tiva board is disconnected!");
     printf("\nInto DEGRADED mode I of operation.");
@@ -26,42 +27,52 @@ void getCurrentAction (CONTROL_RX_t rxData) {
     // TODO: Turn on the appropriate LED on BBG
     dataOut.light = LIGHT_MAINTAIN_DEFAULT;
     dataOut.motor = MOTOR_NO_CHANGE;
-  } else if(rxData.proximity == PROXIMITY_DETECTED) {
+  } 
+  
+  else if(rxData.proximity == PROXIMITY_DETECTED) {
+
     if(rxData.lux > LOW_LIGHT && rxData.lux < HIGH_LIGHT) {
       dataOut.light = LIGHT_NO_CHANGE;
       dataOut.motor = MOTOR_NO_CHANGE;
+      printf("\nLuminosity within desired range. No actuation required.");
     } else if (rxData.lux < LOW_LIGHT && rxData.blindsStatus == MOTOR_CLOSE) {
       dataOut.light = LIGHT_NO_CHANGE;
       dataOut.motor = MOTOR_OPEN;
+      printf("\nLow Luminosity! Issuing command to open the blinds..");
     } else if (rxData.lux < LOW_LIGHT && rxData.blindsStatus == MOTOR_OPEN) {
       dataOut.light = LIGHT_INCREASE;
       dataOut.motor = MOTOR_NO_CHANGE;
+      printf("\nLow Luminosity! Issuing command to increase the light intensity..");
     } else if (rxData.lux > HIGH_LIGHT && rxData.blindsStatus == MOTOR_OPEN) {
       dataOut.light = LIGHT_NO_CHANGE;
       dataOut.motor = MOTOR_CLOSE;
+      printf("\nHigh Luminosity! Issuing command to close the blinds..");
     } else if (rxData.lux > HIGH_LIGHT && rxData.blindsStatus == MOTOR_CLOSE) {
       dataOut.light = LIGHT_DECREASE;
       dataOut.motor = MOTOR_NO_CHANGE;
+      printf("\nHigh Luminosity! Issuing command to decrease the light intensity..");
     }
   } else {  //No proximity detected
+      printf("\nNo proximity detected. No actuation required..");
       dataOut.light = LIGHT_NO_CHANGE;
       dataOut.motor = MOTOR_NO_CHANGE;
   }
+
 }
 
-void *controlLoopHandler(void *arg) {
-    while (1) {
-      deQueueFromLog();
-      fflush(filePtr);
-      //Periodically set the heartbeat flag to be checked by main()
-      controlHeartbeatFlag=true;
-      //Main sets this global flag on receiving the SIGINT signal from user
-      if (terminateSignal) {
-        enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to Control Loop thread.", NULL, NULL);
-        deQueueFromLog();
-        fflush(filePtr);
-        break;
-      }
-      sleep(1);
-    }
-}
+// void *controlLoopHandler(void *arg) {
+//     while (1) {
+//       deQueueFromLog();
+//       fflush(filePtr);
+//       //Periodically set the heartbeat flag to be checked by main()
+//       controlHeartbeatFlag=true;
+//       //Main sets this global flag on receiving the SIGINT signal from user
+//       if (terminateSignal) {
+//         enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to Control Loop thread.", NULL, NULL);
+//         deQueueFromLog();
+//         fflush(filePtr);
+//         break;
+//       }
+//       sleep(1);
+//     }
+// }
