@@ -20,7 +20,10 @@ extern CONTROL_TX_t dataOut;
 
 void getCurrentAction (CONTROL_RX_t rxData) {
   if (rxData.sensorStatus == SENSOR_NOT_WORKING) {
-    // TODO: Log ERROR condition on BBG and change the present state to a degraded condition
+    printf("\nSensor on the Tiva board is disconnected!");
+    printf("\nInto DEGRADED mode I of operation.");
+    printf("\nCommand would be sent only to maintain default lighting condition.");
+    // TODO: Turn on the appropriate LED on BBG
     dataOut.light = LIGHT_MAINTAIN_DEFAULT;
     dataOut.motor = MOTOR_NO_CHANGE;
   } else if(rxData.proximity == PROXIMITY_DETECTED) {
