@@ -18,6 +18,17 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "uartComm.h"
+
+
+// different states defining action to be perfomed by the Motor Task on Tiva
+typedef enum {
+    MOTOR_OPEN,
+    MOTOR_CLOSE,
+    MOTOR_NO_CHANGE
+}MOTOR_CONTROL;
+
+extern xTaskHandle motorTaskHandle;
 
 //*****************************************************************************
 //

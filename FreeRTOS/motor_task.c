@@ -25,6 +25,10 @@ uint32_t g_ui32SysClock;
 
 xTaskHandle motorTaskHandle;
 
+extern xSemaphoreHandle UARTRxDataSem, UARTTxDataSem;
+extern sensorRx dataIn;
+extern sensorTx dataOut;
+
 //*****************************************************************************
 //
 // Initialize GPIO for motor control
@@ -56,11 +60,21 @@ static void gpioInit(void) {
 void motorTask( void *pvParameters ) {
     while (1) {
         ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
-        GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
+        xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
+        xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
+        if (dataIn.motorControl==MOTOR_CLOSE) {
+            dataOut.blindsStatus= MOTOR_CLOSE;
+        }
+        else if (dataIn.motorControl==MOTOR_OPEN) {
+            dataOut.blindsStatus= MOTOR_OPEN;
+        }
+        xSemaphoreGive(UARTTxDataSem);
+        xSemaphoreGive(UARTRxDataSem);
+
+        GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, GPIO_PIN_2);
         /* Calculated as 5 * SysCtlClockGet() / 3 for 5 seconds of delay */
         SysCtlDelay(400000000);
-
         GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, ~GPIO_PIN_2);
     }
 
@@ -79,7 +93,7 @@ uint32_t motorTaskInit(void) {
     //
     // Create the motor task.
     //
-    if(xTaskCreate(motorTask, (const portCHAR *)"QUEUE", MOTORTASKSTACKSIZE, NULL,
+    if(xTaskCreate(motorTask, (const portCHAR *)"MOTOR_TASK", MOTORTASKSTACKSIZE, NULL,
                    tskIDLE_PRIORITY + PRIORITY_MOTOR_TASK, &motorTaskHandle) != pdTRUE)
     {
         return(1);
