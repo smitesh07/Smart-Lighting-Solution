@@ -35,6 +35,7 @@ xTaskHandle lightTaskHandle;
 
 extern xSemaphoreHandle UARTRxDataSem;
 extern sensorRx dataIn;
+extern uint8_t UARTConnectionStatus;
 
 //*****************************************************************************
 //
@@ -44,22 +45,29 @@ extern sensorRx dataIn;
 void lightTask( void *pvParameters ) {
 
     while (1){
+        //Wait for a notification signal from the UART task that some actuation is required
         ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
-
-        xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
-        if (dataIn.lightControl==LIGHT_INCREASE) {
-            /* As timer counts down, to increase luminosity, decrease the match count to increase the on time */
-            dutyCycle = dutyCycle - 2;
+        if (UARTConnectionStatus) {
+            xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
+            if (dataIn.lightControl==LIGHT_INCREASE) {
+                /* As timer counts down, to increase luminosity, decrease the match count to increase the on time */
+                dutyCycle = dutyCycle - 2;
+            }
+            else if (dataIn.lightControl==LIGHT_DECREASE) {
+                /* As timer counts down, to decrease luminosity, increase the match count to decrease the on time */
+                dutyCycle = dutyCycle + 2;
+            }
+            else if (dataIn.lightControl==LIGHT_MAINTAIN_DEFAULT) {
+                /* Default dutyCycle */
+                dutyCycle = Period - 2;
+            }
+            xSemaphoreGive(UARTRxDataSem);
         }
-        else if (dataIn.lightControl==LIGHT_DECREASE) {
-            /* As timer counts down, to decrease luminosity, increase the match count to decrease the on time */
-            dutyCycle = dutyCycle + 2;
-        }
-        else if (dataIn.lightControl==LIGHT_MAINTAIN_DEFAULT) {
-            /* Default dutyCycle */
+        else {
+            //The connection to the control node is lost.
+            //Maintain a default lighting condition
             dutyCycle = Period - 2;
         }
-        xSemaphoreGive(UARTRxDataSem);
 
         TimerMatchSet(TIMER0_BASE, TIMER_B, dutyCycle);
         TimerMatchSet(TIMER1_BASE, TIMER_A, dutyCycle);

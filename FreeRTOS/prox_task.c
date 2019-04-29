@@ -12,11 +12,13 @@
 // The stack size for the Proximity Sensor task.
 //
 //*****************************************************************************
-#define PROXTASKSTACKSIZE        128         // Stack size in words
+#define PROXTASKSTACKSIZE   128         // Stack size in words
 
-#define PRIORITY_PROX_TASK       3
+#define PRIORITY_PROX_TASK  3
 
 #define PROXIMITY_DETECTION_LIMIT   40      //Dist in cm for determining proximity
+
+#define PROX_TASK_PERIOD    5000        //in ms
 
 //****************************************************************************
 //
@@ -55,7 +57,7 @@ static void enableTaskTimer(void) {
                          "Timer",
                          /* The timer period in ticks, must be
                          greater than 0. */
-                         pdMS_TO_TICKS(2000),
+                         pdMS_TO_TICKS(PROX_TASK_PERIOD),
                          /* The timers will auto-reload themselves
                          when they expire. */
                          pdTRUE,

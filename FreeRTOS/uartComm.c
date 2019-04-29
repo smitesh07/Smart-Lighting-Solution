@@ -15,6 +15,10 @@
 
 #define UART_TX_CYCLE   5000    //in milliseconds
 
+//Defined as the number of times a TX cycle is attempted
+#define UART_CONNECTION_TIMEOUT 10
+
+uint8_t UARTConnectionStatus=1, UARTTimeoutCount=0;
 
 //UART transmission semaphore (to be periodically released through a timer)
 xSemaphoreHandle UARTTxSempahore;
@@ -39,9 +43,12 @@ extern uint32_t g_ui32SysClock;
  * ISR to handle UART reception
  */
 void UART6_IntHandler (void) {
+    UARTConnectionStatus=1;
     static uint8_t *ptr = (uint8_t *)&dataIn;
     xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
     while (UARTCharsAvail(UART6_BASE)) {
+        //Write data byte-by-byte to the sensorRx structure
+        //Roll over and notify the actuation tasks if the structure is filled up
         if (ptr== (uint8_t *)&dataIn + sizeof(sensorRx)) {
             ptr = (uint8_t *)&dataIn;
             UARTprintf("\nReceived Light Control: %d\tMotor Control: %d", dataIn.lightControl, dataIn.motorControl);
@@ -100,6 +107,20 @@ void configureUART(void)
  * Timer callback to trigger the UART transmission task
  */
 void vUARTTimerCallBack( TimerHandle_t xUARTTimer ) {
+    //Signal the light task to maintain a default lighting intensity
+    //in case of a connection loss with the control node
+    ++UARTTimeoutCount;
+    if (UARTTimeoutCount == UART_CONNECTION_TIMEOUT) {
+        UARTTimeoutCount=0;
+        if (UARTConnectionStatus) {
+            UARTConnectionStatus=0;
+        }
+        else {
+            xTaskNotifyGive(lightTaskHandle);
+        }
+    }
+
+    //Release the semaphore to begin UART transmission
     xSemaphoreGive(UARTTxSempahore);
 }
 
