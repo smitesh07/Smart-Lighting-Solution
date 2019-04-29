@@ -1,12 +1,12 @@
 /**
  * @file controlLoop.c
  * @author Smitesh Modak and Ashish Tak
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2019-04-27
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 
 #include "controlLoop.h"
@@ -15,12 +15,15 @@
 //Global Control structure variable to be updated by the function getCurrentAction()
 extern CONTROL_TX_t dataOut;
 
-bool controlHeartbeatFlag;
+// bool controlHeartbeatFlag;
 
 
 void getCurrentAction (CONTROL_RX_t rxData) {
   if (rxData.sensorStatus == SENSOR_NOT_WORKING) {
-    // TODO: Log ERROR condition on BBG and change the present state to a degraded condition
+    printf("\nSensor on the Tiva board is disconnected!");
+    printf("\nInto DEGRADED mode I of operation.");
+    printf("\nCommand would be sent only to maintain default lighting condition.");
+    // TODO: Turn on the appropriate LED on BBG
     dataOut.light = LIGHT_MAINTAIN_DEFAULT;
     dataOut.motor = MOTOR_NO_CHANGE;
   } else if(rxData.proximity == PROXIMITY_DETECTED) {

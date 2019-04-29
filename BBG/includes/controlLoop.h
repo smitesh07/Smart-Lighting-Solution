@@ -74,10 +74,9 @@ typedef struct __attribute__((__packed__)){
 //Prototypes
 
 /**
- * @brief Get the Action to be performed of the light and motor task
+ * @brief Get the Action to be performed for the light and motor task
  * 
- * @param lum       Luminosity value received 
- * @return CONTROL_TX_t     Action structure to be passed via UART
+ * @param rxData    Data structure received via UART from the sensor node (Tiva)
  */
 void getCurrentAction (CONTROL_RX_t rxData);
 
@@ -85,6 +84,6 @@ void getCurrentAction (CONTROL_RX_t rxData);
  * @brief Handler function / Entry point for the Control Loop thread
  * 
  */
-void *controlLoopHandler(void *arg);
+// void *controlLoopHandler(void *arg);
 
 #endif /* SRC_CONTROLLOOP_H_ */

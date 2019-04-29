@@ -23,7 +23,14 @@ sem_t * sem_uart_rx_data;
 #define UART_TRANSMISSION_INTERVAL 5
 #define UART_RECEPTION_INTERVAL 5
 
+#define UART_CONNECTION_TIMEOUT 20 //in seconds
+
+//Heartbeat flag for the UART thread
 bool uartHeartbeatFlag;
+
+//Heartbeat flag to indicate UART connection 
+bool uartConnectedHeartBeatFlag;
+
 int fd;
 CONTROL_RX_t dataIn;
 CONTROL_TX_t dataOut;
@@ -83,8 +90,9 @@ void UARTTransmissionTrigger (void) {
 void UARTReceptionTrigger (void) {
     sem_wait(sem_uart_rx_data);
     read(fd, &dataIn, sizeof(CONTROL_RX_t));
+    uartConnectedHeartBeatFlag = true;
     sem_post(sem_uart_rx_data);
-    printf("\nRecd values: %f\t%d\t%d\t%d",dataIn.lux, dataIn.proximity, dataIn.sensorStatus, dataIn.blindsStatus);
+    printf("\nRecd: %f\t%d\t%d\t%d",dataIn.lux, dataIn.proximity, dataIn.sensorStatus, dataIn.blindsStatus);
     tcflush(fd,TCIFLUSH);
 }
 
@@ -104,11 +112,29 @@ void *uartHandler(void *arg) {
     uartTxTimerid= initTimer(UART_TRANSMISSION_INTERVAL*(uint64_t)1000000000, UARTTransmissionTrigger);
     uartRxTimerid= initTimer(UART_RECEPTION_INTERVAL*(uint64_t)1000000000, UARTReceptionTrigger);
 
+    uint8_t timoeoutCount=0;
+
     while (1) {
       deQueueFromLog();
       fflush(filePtr);
       //Periodically set the heartbeat flag to be checked by main()
       uartHeartbeatFlag=true;
+
+      //Check the UART connection to the Tiva board
+      ++timoeoutCount;
+      if (timoeoutCount==UART_CONNECTION_TIMEOUT) {
+        timoeoutCount=0;
+        if (uartConnectedHeartBeatFlag) {
+          uartConnectedHeartBeatFlag=false;
+        }
+        else{
+          printf("\nUART Connection to the Tiva board is lost.");
+          printf("\nInto DEGRADED mode II of operation.");
+          printf("\nNo commands would be sent unless further sensor data is received.");
+          //TODO: Turn on the appropriate LED On the BBG
+        }
+      }  
+
       //Main sets this global flag on receiving the SIGINT signal from user
       if (terminateSignal) {
         enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to UART thread.", NULL, NULL);
