@@ -125,7 +125,7 @@ uint32_t lightTaskInit(void) {
     //
     // Create the light task.
     //
-    if(xTaskCreate(lightTask, (const portCHAR *)"QUEUE", LIGHTTASKSTACKSIZE, NULL,
+    if(xTaskCreate(lightTask, (const portCHAR *)"LIGHT_TASK", LIGHTTASKSTACKSIZE, NULL,
                    tskIDLE_PRIORITY + PRIORITY_LIGHT_TASK, &lightTaskHandle) != pdTRUE)
     {
         return(1);

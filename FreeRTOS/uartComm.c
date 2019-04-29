@@ -25,7 +25,7 @@ xSemaphoreHandle UARTTxDataSem, UARTRxDataSem;
 sensorRx dataIn;
 sensorTx dataOut;
 
-extern xTaskHandle lightTaskHandle;
+extern xTaskHandle lightTaskHandle, motorTaskHandle;
 
 //****************************************************************************
 //
@@ -48,10 +48,9 @@ void UART6_IntHandler (void) {
             if (dataIn.lightControl!=LIGHT_NO_CHANGE) {
                 xTaskNotifyGive(lightTaskHandle);
             }
-            //TODO: signal the motor actuation task
-//            if (dataIn.motorControl!=MOTOR_NO_CHANGE) {
-//
-//            }
+            if (dataIn.motorControl!=MOTOR_NO_CHANGE) {
+                xTaskNotifyGive(motorTaskHandle);
+            }
         }
         *ptr= (uint8_t) UARTCharGet(UART6_BASE);
         ++ptr;
@@ -113,8 +112,6 @@ void uartTxRoutine (void * pvParameters) {
 
     while (1) {
         if( xSemaphoreTake( UARTTxSempahore, portMAX_DELAY ) == pdTRUE ) {
-//            TODO: Fetch the blindsStatus value before every transmission
-            dataOut.blindsStatus=1;
             xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
             ptr=(uint8_t *) &dataOut;
             for (i=0; i<sizeof(dataOut);i++) {

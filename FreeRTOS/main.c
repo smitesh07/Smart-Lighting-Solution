@@ -229,13 +229,13 @@ main(void)
     //
     // Create the motor task.
     //
-//    if(motorTaskInit() != 0)
-//    {
-//
-//        while(1)
-//        {
-//        }
-//    }
+    if(motorTaskInit() != 0)
+    {
+
+        while(1)
+        {
+        }
+    }
 
     //
     // Create the UART communication task

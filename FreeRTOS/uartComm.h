@@ -24,6 +24,7 @@
 #include "semphr.h"
 #include "timers.h"
 #include "light_task.h"
+#include "motor_task.h"
 
 
 //Structure to be sent via UART to the BBG for reporting status of the peripherals
