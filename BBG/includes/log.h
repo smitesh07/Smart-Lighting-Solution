@@ -23,6 +23,7 @@
 #include <time.h>
 #include <signal.h>
 #include "timer.h"
+#include "controlLoop.h"
 
 #define LOG_MAX_LENGTH 100
 
@@ -50,8 +51,8 @@ typedef enum LOG_LEVEL {
 typedef struct {
   LOG_LEVEL_t level;
   char msg[LOG_MAX_LENGTH];
-  float value;
-  // pid_t pid;
+  CONTROL_RX_t controlRx;
+  CONTROL_TX_t controlTx;
 } LOG_t;
 
 #ifndef LOG_ERROR
