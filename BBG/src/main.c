@@ -23,6 +23,7 @@
 #include "timer.h"
 #include "uart.h"
 #include "controlLoop.h"
+#include "SimpleGPIO.h"
 
 
 #define HEARTBEAT_TIMEOUT 10 //in seconds
@@ -47,12 +48,12 @@ void heartbeatTimerHandler () {
         pthread_cancel(uart);    
     }
 
-    if (controlHeartbeatFlag)
-        controlHeartbeatFlag = false;
-    else {
-        enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
-        pthread_cancel(controlLoop);    
-    }
+    // if (controlHeartbeatFlag)
+    //     controlHeartbeatFlag = false;
+    // else {
+    //     enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
+    //     pthread_cancel(controlLoop);    
+    // }
     
 
     if (logHeartbeatFlag)
@@ -120,9 +121,9 @@ int main(int argc, char *argv[])
     txControl.light = 5;
     txControl.motor = 6;
 
-    enQueueForLog(PLAIN_MSG, INFO, "HELLO WORLD", NULL, NULL);
-    enQueueForLog(PLAIN_MSG, ERROR, "HELLO WORLD", NULL, NULL);
-    enQueueForLog(PLAIN_MSG, WARN, "HELLO WORLD", NULL, NULL);
+    // enQueueForLog(PLAIN_MSG, INFO, "HELLO WORLD", NULL, NULL);
+    // enQueueForLog(PLAIN_MSG, ERROR, "HELLO WORLD", NULL, NULL);
+    // enQueueForLog(PLAIN_MSG, WARN, "HELLO WORLD", NULL, NULL);
     enQueueForLog(CONTROL_RX, INFO, "CONTROL RX", &rxControl, NULL);
     enQueueForLog(CONTROL_TX, INFO, "CONTROL TX", NULL, &txControl);
 /*****************************************************************/
@@ -133,6 +134,19 @@ int main(int argc, char *argv[])
 	sa.sa_handler=&sigHandler;
 	sa.sa_flags=0;
 	sigaction(SIGINT, &sa, NULL);
+
+    gpio_export(USR_LED0);
+    gpio_set_dir(USR_LED0, OUTPUT_PIN);
+    gpio_export(USR_LED1);
+    gpio_set_dir(USR_LED1, OUTPUT_PIN);
+
+/*********************** Test ************************************/
+    gpio_set_value(USR_LED0, 1);
+    gpio_set_value(USR_LED1, 1);
+    usleep(5000000);
+    gpio_set_value(USR_LED0, 0);
+    gpio_set_value(USR_LED1, 0);
+/*****************************************************************/
 
     pthread_create (&uart, NULL, uartHandler, NULL);
     // pthread_create (&controlLoop, NULL, controlLoopHandler, NULL);

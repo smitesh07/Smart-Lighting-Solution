@@ -21,8 +21,11 @@ extern CONTROL_TX_t dataOut;
 void getCurrentAction (CONTROL_RX_t rxData) {
   if (rxData.sensorStatus == SENSOR_NOT_WORKING) {
     printf("\nSensor on the Tiva board is disconnected!");
+    enQueueForLog(PLAIN_MSG, ERROR, "Sensor on the Tiva board is disconnected!", NULL, NULL);
     printf("\nInto DEGRADED mode I of operation.");
+    enQueueForLog(PLAIN_MSG, ERROR, "Into DEGRADED mode I of operation.", NULL, NULL);
     printf("\nCommand would be sent only to maintain default lighting condition.");
+    enQueueForLog(PLAIN_MSG, ERROR, "Command would be sent only to maintain default lighting condition.", NULL, NULL);
     // TODO: Turn on the appropriate LED on BBG
     dataOut.light = LIGHT_MAINTAIN_DEFAULT;
     dataOut.motor = MOTOR_NO_CHANGE;
@@ -49,19 +52,19 @@ void getCurrentAction (CONTROL_RX_t rxData) {
   }
 }
 
-void *controlLoopHandler(void *arg) {
-    while (1) {
-      deQueueFromLog();
-      fflush(filePtr);
-      //Periodically set the heartbeat flag to be checked by main()
-      controlHeartbeatFlag=true;
-      //Main sets this global flag on receiving the SIGINT signal from user
-      if (terminateSignal) {
-        enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to Control Loop thread.", NULL, NULL);
-        deQueueFromLog();
-        fflush(filePtr);
-        break;
-      }
-      sleep(1);
-    }
-}
+// void *controlLoopHandler(void *arg) {
+//     while (1) {
+//       deQueueFromLog();
+//       fflush(filePtr);
+//       //Periodically set the heartbeat flag to be checked by main()
+//       controlHeartbeatFlag=true;
+//       //Main sets this global flag on receiving the SIGINT signal from user
+//       if (terminateSignal) {
+//         enQueueForLog(PLAIN_MSG, WARN, "Termination signal received to Control Loop thread.", NULL, NULL);
+//         deQueueFromLog();
+//         fflush(filePtr);
+//         break;
+//       }
+//       sleep(1);
+//     }
+// }
