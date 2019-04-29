@@ -16,3 +16,4 @@ FreeRTOS/Debug/utils/subdir_rules.mk
 FreeRTOS/Debug/third_party/FreeRTOS/Source/subdir_rules.mk
 *.mk
 FreeRTOS/Debug/Smart-Lighting-Solution_linkInfo.xml
+BBG/log.txt
