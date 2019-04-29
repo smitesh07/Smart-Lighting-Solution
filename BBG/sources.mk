@@ -5,6 +5,7 @@ SRCS = src/main.c \
 	   src/queue.c \
 	   src/uart.c \
 	   src/controlLoop.c \
+	   src/SimpleGPIO.c \
 
 #Defining paths for the header files
 INCLUDE_H = includes/
