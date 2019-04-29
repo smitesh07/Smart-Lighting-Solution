@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
       strcat(logFile,fileName);
     } 
     else {
-        printf("\nNo Log file name provided. Will use the default 'log.txt\n");
+        printf("\nNo Log file name provided. Will use the default 'log.txt'\n");
         strcpy(logFile, "log.txt");
     }
 
@@ -127,13 +127,13 @@ int main(int argc, char *argv[])
 	sigaction(SIGINT, &sa, NULL);
 
     pthread_create (&uart, NULL, uartHandler, NULL);
-    pthread_create (&controlLoop, NULL, controlLoopHandler, NULL);
+    // pthread_create (&controlLoop, NULL, controlLoopHandler, NULL);
     pthread_create (&logger, NULL, loggerHandler, NULL);
 
     mainTimerid= initTimer(HEARTBEAT_TIMEOUT*(uint64_t)1000000000, heartbeatTimerHandler);
 
     pthread_join(uart, NULL);
-    pthread_join(controlLoop, NULL);
+    // pthread_join(controlLoop, NULL);
     pthread_join(logger, NULL);
 
     enQueueForLog(WARN, "Main thread terminating..", 0);

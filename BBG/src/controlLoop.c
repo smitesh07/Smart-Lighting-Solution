@@ -15,7 +15,7 @@
 //Global Control structure variable to be updated by the function getCurrentAction()
 extern CONTROL_TX_t dataOut;
 
-bool controlHeartbeatFlag;
+// bool controlHeartbeatFlag;
 
 
 void getCurrentAction (CONTROL_RX_t rxData) {
@@ -46,19 +46,19 @@ void getCurrentAction (CONTROL_RX_t rxData) {
   }
 }
 
-void *controlLoopHandler(void *arg) {
-    while (1) {
-      deQueueFromLog();
-      fflush(filePtr);
-      //Periodically set the heartbeat flag to be checked by main()
-      controlHeartbeatFlag=true;
-      //Main sets this global flag on receiving the SIGINT signal from user
-      if (terminateSignal) {
-        enQueueForLog(WARN, "Termination signal received to Control Loop thread.", 0);
-        deQueueFromLog();
-        fflush(filePtr);
-        break;
-      }
-      sleep(1);
-    }
-}
+// void *controlLoopHandler(void *arg) {
+//     while (1) {
+//       deQueueFromLog();
+//       fflush(filePtr);
+//       //Periodically set the heartbeat flag to be checked by main()
+//       controlHeartbeatFlag=true;
+//       //Main sets this global flag on receiving the SIGINT signal from user
+//       if (terminateSignal) {
+//         enQueueForLog(WARN, "Termination signal received to Control Loop thread.", 0);
+//         deQueueFromLog();
+//         fflush(filePtr);
+//         break;
+//       }
+//       sleep(1);
+//     }
+// }
