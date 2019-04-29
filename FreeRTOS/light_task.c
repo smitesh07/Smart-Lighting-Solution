@@ -31,6 +31,11 @@ uint32_t freq = 100000;
 
 uint32_t Period, dutyCycle;
 
+xTaskHandle lightTaskHandle;
+
+extern xSemaphoreHandle UARTRxDataSem;
+extern sensorRx dataIn;
+
 //*****************************************************************************
 //
 // Light task.
@@ -39,6 +44,21 @@ uint32_t Period, dutyCycle;
 void lightTask( void *pvParameters ) {
     int i;
     while (1){
+        ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
+
+        //TODO: Change the duty cycle as per value of the commands received via UART from BBG
+        xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
+        if (dataIn.lightControl==LIGHT_INCREASE) {
+
+        }
+        else if (dataIn.lightControl==LIGHT_DECREASE) {
+
+        }
+        else if (dataIn.lightControl==LIGHT_MAINTAIN_DEFAULT) {
+
+        }
+        xSemaphoreGive(UARTRxDataSem);
+
         TimerMatchSet(TIMER1_BASE, TIMER_A, dutyCycle);
         TimerMatchSet(TIMER1_BASE, TIMER_B, dutyCycle);
         SysCtlDelay(time);
@@ -142,7 +162,7 @@ uint32_t lightTaskInit(void) {
     // Create the light task.
     //
     if(xTaskCreate(lightTask, (const portCHAR *)"QUEUE", LIGHTTASKSTACKSIZE, NULL,
-                   tskIDLE_PRIORITY + PRIORITY_LIGHT_TASK, NULL) != pdTRUE)
+                   tskIDLE_PRIORITY + PRIORITY_LIGHT_TASK, &lightTaskHandle) != pdTRUE)
     {
         return(1);
     }

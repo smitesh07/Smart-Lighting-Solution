@@ -23,6 +23,13 @@
 #include "semphr.h"
 #include "timers.h"
 #include "apds9301.h"
+#include "uartComm.h"
+
+
+typedef enum {
+    SENSOR_NOT_WORKING,
+    SENSOR_WORKING
+}SENSOR_STATUS;
 
 
 //*****************************************************************************

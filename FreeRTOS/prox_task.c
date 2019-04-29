@@ -16,6 +16,8 @@
 
 #define PRIORITY_PROX_TASK       3
 
+#define PROXIMITY_DETECTION_LIMIT   40      //Dist in cm for determining proximity
+
 //****************************************************************************
 //
 // System clock rate in Hz.
@@ -28,6 +30,10 @@ xSemaphoreHandle xSemaphoreProx;
 
 /* Handle to the created timer. */
 TimerHandle_t xProxTimer;
+
+extern xSemaphoreHandle UARTTxDataSem;
+extern sensorTx dataOut;
+
 
 /* Define a callback function that will be used by Lum timer
  instance.  The callback function does nothing but pass on the semaphore to the waiting task */
@@ -174,6 +180,15 @@ void proxTask( void *pvParameters ) {
 
         //Prints out the distance measured.
         UARTprintf("Distance = %2dcm \n" , pulse);
+
+        xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
+        if (pulse<PROXIMITY_DETECTION_LIMIT) {
+            dataOut.proximity= PROXIMITY_DETECTED;
+        }
+        else {
+            dataOut.proximity= NO_PROXIMITY;
+        }
+        xSemaphoreGive(UARTTxDataSem);
     }
 }
 

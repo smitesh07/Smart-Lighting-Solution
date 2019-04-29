@@ -29,6 +29,10 @@ xSemaphoreHandle xSemaphoreLum;
 /* Handle to the created timer. */
  TimerHandle_t xLumTimer;
 
+extern xSemaphoreHandle UARTTxDataSem;
+extern sensorTx dataOut;
+
+
 /* Define a callback function that will be used by Lum timer
  instance.  The callback function does nothing but pass on the semaphore to the waiting task */
  void vLumTimerCallback( TimerHandle_t xTimer )
@@ -93,9 +97,21 @@ static void lumTask( void *pvParameters ) {
     while(1) {
         xSemaphoreTake(xSemaphoreLum, portMAX_DELAY);
         UARTprintf("Lum task initiated\n");
-        float lum = getLum();
-        i32IntegerPart = (int32_t)lum;
-        i32FractionPart = (int32_t)(lum * 1000.0f);
+        float lux = getLum();
+
+        xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
+        if (lux<0) {
+            dataOut.sensorStatus = SENSOR_NOT_WORKING;
+            dataOut.lux=0;
+        }
+        else {
+            dataOut.sensorStatus = SENSOR_WORKING;
+            dataOut.lux = lux;
+        }
+        xSemaphoreGive(UARTTxDataSem);
+
+        i32IntegerPart = (int32_t)lux;
+        i32FractionPart = (int32_t)(lux * 1000.0f);
         i32FractionPart = i32FractionPart - (i32IntegerPart * 1000);
         if(i32FractionPart < 0)
         {

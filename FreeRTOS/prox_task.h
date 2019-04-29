@@ -25,6 +25,14 @@
 #include "task.h"
 #include "semphr.h"
 #include "timers.h"
+#include "uartComm.h"
+
+
+typedef enum {
+    NO_PROXIMITY,
+    PROXIMITY_DETECTED
+}PROXIMITY_STATUS;
+
 
 //*****************************************************************************
 //

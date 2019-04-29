@@ -22,6 +22,19 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "uartComm.h"
+
+
+// different states defining action to be perfomed by the Light Task
+typedef enum {
+    LIGHT_INCREASE,
+    LIGHT_DECREASE,
+    LIGHT_NO_CHANGE,
+    LIGHT_MAINTAIN_DEFAULT
+}LIGHT_CONTROL;
+
+extern xTaskHandle lightTaskHandle;
+
 
 //*****************************************************************************
 //
