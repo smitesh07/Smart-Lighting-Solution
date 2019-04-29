@@ -19,6 +19,13 @@
 #include <string.h>
 #include <mqueue.h>
 #include "log.h"
+#include "controlLoop.h"
+
+typedef enum {
+  CONTROL_TX,
+  CONTROL_RX,
+  PLAIN_MSG
+} MESSAGE_TYPE;
 
 /**
  * @brief message queue structure
@@ -26,7 +33,7 @@
  */
 typedef struct {
   long mtype;
-  // LOG_t logQueue;
+  LOG_t logQueue;
 }QUEUE_t;
 
 extern mqd_t mqdes;
@@ -45,7 +52,7 @@ void initQueue(char *queueName);
  * @param msg     message
  * @param value   value from the sensors
  */
-void enQueueForLog(LOG_LEVEL_t level, char *msg, float value);
+void enQueueForLog(MESSAGE_TYPE msgtype, LOG_LEVEL_t level, char *msg, CONTROL_RX_t *rxControl, CONTROL_TX_t *txControl);
 
 /**
  * @brief dequeue from the logger queue and LOG it
