@@ -23,8 +23,8 @@
 //****************************************************************************
 uint32_t g_ui32SysClock;
 
-//about 2ms at 80Mhz
-#define time 56666
+// Calulated as ((2ms/1000) * SysCtlClockGet())/ 3 for 2ms of delay
+#define time 80000
 
 //PWM frequency in hz
 uint32_t freq = 100000;
@@ -42,60 +42,29 @@ extern sensorRx dataIn;
 //
 //*****************************************************************************
 void lightTask( void *pvParameters ) {
-    int i;
+
     while (1){
         ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
 
-        //TODO: Change the duty cycle as per value of the commands received via UART from BBG
         xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
         if (dataIn.lightControl==LIGHT_INCREASE) {
-
+            /* As timer counts down, to increase luminosity, decrease the match count to increase the on time */
+            dutyCycle = dutyCycle - 2;
         }
         else if (dataIn.lightControl==LIGHT_DECREASE) {
-
+            /* As timer counts down, to decrease luminosity, increase the match count to decrease the on time */
+            dutyCycle = dutyCycle + 2;
         }
         else if (dataIn.lightControl==LIGHT_MAINTAIN_DEFAULT) {
-
+            /* Default dutyCycle */
+            dutyCycle = Period - 2;
         }
         xSemaphoreGive(UARTRxDataSem);
 
+        TimerMatchSet(TIMER0_BASE, TIMER_B, dutyCycle);
         TimerMatchSet(TIMER1_BASE, TIMER_A, dutyCycle);
         TimerMatchSet(TIMER1_BASE, TIMER_B, dutyCycle);
         SysCtlDelay(time);
-
-//        //Blue brightness goes up - PF2
-//        for(i=Period-2; i > 0;i--){
-//            TimerMatchSet(TIMER1_BASE, TIMER_A, i);
-//            TimerMatchSet(TIMER1_BASE, TIMER_B, i);
-//            SysCtlDelay(time);
-//        }
-//        //Red brightness goes down - PF1
-//        for(i=1; i < Period-1; i++){
-//            TimerMatchSet(TIMER0_BASE, TIMER_B, i);
-//            SysCtlDelay(time);
-//        }
-//        //Green brightness goes up - PF3
-//        for(i=Period-2; i >  0;i--){
-//            TimerMatchSet(TIMER1_BASE, TIMER_B, i);
-//            SysCtlDelay(time);
-//        }
-//        //Blue brightness goes down - PF2
-//        for(i=1; i < Period-1; i++){
-//            TimerMatchSet(TIMER1_BASE, TIMER_A, i);
-//            TimerMatchSet(TIMER1_BASE, TIMER_B, i);
-//            SysCtlDelay(time);
-//        }
-        //Red brightness goes up - PF1
-        //        for(i=Period-2; i > 0;i--){
-        //            TimerMatchSet(TIMER0_BASE, TIMER_B, i);
-        //            SysCtlDelay(time);
-        //        }
-        //        //Green brightness goes down - PF3
-        //        for(i=1; i < Period-1; i++){
-        //            TimerMatchSet(TIMER1_BASE, TIMER_B, i);
-        //            SysCtlDelay(time);
-        //        }
-
     }
 
 }
@@ -109,7 +78,9 @@ uint32_t lightTaskInit(void) {
     int i;
 
     Period = SysCtlClockGet()/freq ;
-    dutyCycle = Period-3;
+
+    /* Default dutyCycle */
+    dutyCycle = Period-2;
 
     /*
         Configure PF1 as T0CCP1
@@ -123,7 +94,6 @@ uint32_t lightTaskInit(void) {
     GPIOPinConfigure(GPIO_PD2_T1CCP0);
     GPIOPinConfigure(GPIO_PD3_T1CCP1);
     GPIOPinTypeTimer(GPIO_PORTD_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);
-    //
 
     /*
         Configure timer 0 to split pair and timer B in PWM mode
@@ -151,12 +121,6 @@ uint32_t lightTaskInit(void) {
     //Turn on both timers
     TimerEnable(TIMER0_BASE, TIMER_B);
     TimerEnable(TIMER1_BASE, TIMER_A|TIMER_B);
-
-    //Start by rising Red LED
-    for(i=Period-2; i >  0;i--){
-        TimerMatchSet(TIMER0_BASE, TIMER_B, i);
-        SysCtlDelay(time);
-    }
 
     //
     // Create the light task.
