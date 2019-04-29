@@ -11,15 +11,19 @@
 
 #include "uart.h"
 
-//Path to the file for using UART1
+//Path to the file on the device for using UART1
 #define UART_DEV_FILE "/dev/ttyO1"
+
+//Semaphore to synchronize access to the data structure received from UART
+#define SEM_UART_RX_DATA "/sem_uart_rx_data"
+
+sem_t * sem_uart_rx_data;
 
 //Transmission and reception intervals in seconds
 #define UART_TRANSMISSION_INTERVAL 5
 #define UART_RECEPTION_INTERVAL 5
 
 bool uartHeartbeatFlag;
-timer_t uartTxTimerid, uartRxTimerid;
 int fd;
 CONTROL_RX_t dataIn;
 CONTROL_TX_t dataOut;
@@ -58,11 +62,14 @@ void uartInit (void) {
  * 
  */
 void UARTTransmissionTrigger (void) {
+    //Pass the latest UART data received to the control function 
+    sem_wait(sem_uart_rx_data);
     getCurrentAction (dataIn);
-    //TODO: Integrate with the Control loop
-    // dataOut.light=1;
-    // dataOut.motor=0;  
+    sem_post(sem_uart_rx_data);
     tcflush(fd,TCOFLUSH);
+    //getCurrentAction() updates the value of the global var dataOut
+    //NOTE: No need to guard dataOut with mutex in the present scenario,
+    //since it is used by write() only after a return from getCurrentAction()
     write(fd, &dataOut, sizeof(CONTROL_TX_t));
 }
 
@@ -72,7 +79,9 @@ void UARTTransmissionTrigger (void) {
  * 
  */
 void UARTReceptionTrigger (void) {
+    sem_wait(sem_uart_rx_data);
     read(fd, &dataIn, sizeof(CONTROL_RX_t));
+    sem_post(sem_uart_rx_data);
     printf("\nRecd values: %f\t%d\t%d\t%d",dataIn.lux, dataIn.proximity, dataIn.sensorStatus, dataIn.blindsStatus);
     tcflush(fd,TCIFLUSH);
 }
@@ -80,6 +89,13 @@ void UARTReceptionTrigger (void) {
 
 void *uartHandler(void *arg) {
     uartInit();
+
+    //Create and Initialize the semaphore to synchronize access to the data structure received from UART
+    sem_uart_rx_data = sem_open(SEM_UART_RX_DATA, O_RDWR | O_CREAT, 0666, 1);
+    if (sem_uart_rx_data == SEM_FAILED || sem_uart_rx_data == SEM_FAILED)
+        perror("sem_open failed\n");
+
+    timer_t uartTxTimerid, uartRxTimerid;
 
     uartTxTimerid= initTimer(UART_TRANSMISSION_INTERVAL*(uint64_t)1000000000, UARTTransmissionTrigger);
     uartRxTimerid= initTimer(UART_RECEPTION_INTERVAL*(uint64_t)1000000000, UARTReceptionTrigger);

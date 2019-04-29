@@ -25,6 +25,7 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <semaphore.h>
 #include "timer.h"
 #include "queue.h"
 #include "controlLoop.h"
@@ -32,7 +33,10 @@
 extern FILE *filePtr;
 extern bool uartHeartbeatFlag;
 
+//Global declaration of the Control structure variable so as to be updated by the control loop before transmission
 extern CONTROL_TX_t dataOut;
+
+extern sem_t * sem_uart_rx_data;
 
 //Prototypes
 

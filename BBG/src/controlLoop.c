@@ -11,30 +11,13 @@
 
 #include "controlLoop.h"
 
-#define SENSOR_WORKING  1  
-#define SENSOR_NOT_WORKING  0
-
-#define PROXIMITY_DETECTED  1
-#define NO_PROXIMITY  0
-
+//Global Control structure variable to be updated by the function getCurrentAction()
 extern CONTROL_TX_t dataOut;
 
 bool controlHeartbeatFlag;
 
-// default state of the light task on Tiva
-LIGHT_CONTROL lightControl = LIGHT_NO_CHANGE;
-
-// default state of the motor task on Tiva
-MOTOR_CONTROL motorControl = MOTOR_NO_CHANGE;
-
 
 void getCurrentAction (CONTROL_RX_t rxData) {
-  // CONTROL_TX_t *controlAction;
-  // controlAction = (CONTROL_TX_t *) malloc (sizeof(CONTROL_TX_t));
-
-  // float lum;
-  // uint8_t proximity, sensorStatus, blindStatus;
-
   if (rxData.sensorStatus == SENSOR_NOT_WORKING) {
     // TODO: Log ERROR condition on BBG and change the present state to a degraded condition
     dataOut.light = LIGHT_MAINTAIN_DEFAULT;
@@ -55,10 +38,10 @@ void getCurrentAction (CONTROL_RX_t rxData) {
     } else if (rxData.lux > HIGH_LIGHT && rxData.blindsStatus == MOTOR_CLOSE) {
       dataOut.light = LIGHT_DECREASE;
       dataOut.motor = MOTOR_NO_CHANGE;
-    } else {
+    }
+  } else {  //No proximity detected
       dataOut.light = LIGHT_NO_CHANGE;
       dataOut.motor = MOTOR_NO_CHANGE;
-    }
   }
 }
 
