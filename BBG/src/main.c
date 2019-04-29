@@ -45,16 +45,16 @@ void heartbeatTimerHandler () {
         uartHeartbeatFlag = false;
     else {
         enQueueForLog(PLAIN_MSG, ERROR, "Uart thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
-        pthread_cancel(uart);    
+        pthread_cancel(uart);
     }
 
     // if (controlHeartbeatFlag)
     //     controlHeartbeatFlag = false;
     // else {
     //     enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
-    //     pthread_cancel(controlLoop);    
+    //     pthread_cancel(controlLoop);
     // }
-    
+
 
     if (logHeartbeatFlag)
         logHeartbeatFlag=false;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
       strcpy(logFile, argv[1]);
       strcpy(fileName, argv[2]);
       strcat(logFile,fileName);
-    } 
+    }
     else {
         printf("\nNo Log file name provided. Will use the default 'log.txt'\n");
         strcpy(logFile, "log.txt");
@@ -147,6 +147,7 @@ int main(int argc, char *argv[])
     gpio_set_value(USR_LED0, 0);
     gpio_set_value(USR_LED1, 0);
 /*****************************************************************/
+    printf("\nMain spawned. Creating other threads..");
 
     pthread_create (&uart, NULL, uartHandler, NULL);
     // pthread_create (&controlLoop, NULL, controlLoopHandler, NULL);
