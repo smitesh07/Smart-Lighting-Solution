@@ -29,7 +29,7 @@ sem_t * sem_uart_rx_data;
 bool uartHeartbeatFlag;
 
 //Heartbeat flag to indicate UART connection 
-bool uartConnectedHeartBeatFlag;
+bool uartConnectedHeartBeatFlag=false;
 
 int fd;
 CONTROL_RX_t dataIn;
@@ -88,6 +88,9 @@ void UARTTransmissionTrigger (void) {
 void UARTReceptionTrigger (void) {
     sem_wait(sem_uart_rx_data);
     read(fd, &dataIn, sizeof(CONTROL_RX_t));
+    if (uartConnectedHeartBeatFlag==false) {
+      printf("\nUART Connection to the remote node is now established");
+    }
     uartConnectedHeartBeatFlag = true;
     sem_post(sem_uart_rx_data);
     printf("\nRecd: %f\t%d\t%d\t%d",dataIn.lux, dataIn.proximity, dataIn.sensorStatus, dataIn.blindsStatus);
@@ -124,7 +127,7 @@ void *uartHandler(void *arg) {
           uartConnectedHeartBeatFlag=false;
         }
         else{
-          printf("\nUART Connection to the Tiva board is lost.");
+          printf("\nUART Connection to the remote node is lost.");
           printf("\nInto DEGRADED mode II of operation.");
           printf("\nNo commands would be sent unless further sensor data is received.");
           //TODO: Turn on the appropriate LED On the BBG
