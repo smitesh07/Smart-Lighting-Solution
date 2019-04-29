@@ -46,8 +46,6 @@ void *loggerHandler(void *arg) {
       //Main sets this global flag on receiving the SIGINT signal from user
       if (terminateSignal) {
         enQueueForLog(WARN, "Termination signal received to Logger thread.", 0);
-        deQueueFromLog();
-        fflush(filePtr);
         break;
       }
       sleep(1);
