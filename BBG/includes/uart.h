@@ -29,6 +29,7 @@
 #include "timer.h"
 #include "queue.h"
 #include "controlLoop.h"
+#include "SimpleGPIO.h"
 
 extern FILE *filePtr;
 extern bool uartHeartbeatFlag;

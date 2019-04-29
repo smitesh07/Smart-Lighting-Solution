@@ -100,6 +100,7 @@ void UARTReceptionTrigger (void) {
     if (newConnection==false) {
       newConnection=true;
       printf("\nUART Connection to the remote node is now established");
+      enQueueForLog(PLAIN_MSG, INFO, "UART Connection to the remote node is now established", NULL, NULL);
     }
     uartConnectedHeartBeatFlag = true;
     if (dataIn.sensorStatus) {
@@ -107,6 +108,7 @@ void UARTReceptionTrigger (void) {
       printf("\nLuminosity: %f", dataIn.lux);
       printf("\nProximity: %s", dataIn.proximity ? "Detected" : "Not detected");
       printf("\nBlinds: %s", dataIn.blindsStatus ? "Closed" : "Open" );
+      enQueueForLog(CONTROL_RX, INFO, "Received data from the remote node.", &dataIn, NULL);
     }
     sem_post(sem_uart_rx_data);
     tcflush(fd,TCIFLUSH);
@@ -118,6 +120,7 @@ void *uartHandler(void *arg) {
 
     if (uartInit()!=0) {
       printf("\nUART thread terminating..");
+      enQueueForLog(PLAIN_MSG, ERROR, "UART thread terminating..", NULL, NULL);
       return;
     }
 
@@ -127,6 +130,7 @@ void *uartHandler(void *arg) {
         perror("sem_open failed\n");
         enQueueForLog(PLAIN_MSG, ERROR, "sem_open failed.", NULL, NULL);
         printf("\nUART thread terminating..");
+        enQueueForLog(PLAIN_MSG, ERROR, "UART thread terminating..", NULL, NULL);
         return;
     }
 
@@ -156,6 +160,12 @@ void *uartHandler(void *arg) {
           printf("\nInto DEGRADED mode II of operation.");
           printf("\nNo commands would be sent unless further sensor data is received.");
           //TODO: Turn on the appropriate LED On the BBG
+          gpio_set_value(USR_LED1, 1);
+          usleep(5000000);
+          gpio_set_value(USR_LED1, 0);
+          enQueueForLog(PLAIN_MSG, ERROR, "UART Connection to the remote node is lost.", NULL, NULL);
+          enQueueForLog(PLAIN_MSG, ERROR, "Into DEGRADED mode II of operation.", NULL, NULL);
+          enQueueForLog(PLAIN_MSG, ERROR, "No commands would be sent unless further sensor data is received.", NULL, NULL);
         }
       }  
 

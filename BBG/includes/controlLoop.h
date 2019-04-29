@@ -24,6 +24,7 @@
 #include <time.h>
 #include <signal.h>
 #include "timer.h"
+#include "SimpleGPIO.h"
 
 extern FILE *filePtr;
 extern bool controlHeartbeatFlag;
