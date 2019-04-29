@@ -10,6 +10,7 @@
  */
 
 #include "controlLoop.h"
+#include "queue.h"
 
 //Global Control structure variable to be updated by the function getCurrentAction()
 extern CONTROL_TX_t dataOut;

@@ -24,7 +24,6 @@
 #include <time.h>
 #include <signal.h>
 #include "timer.h"
-#include "queue.h"
 
 extern FILE *filePtr;
 extern bool controlHeartbeatFlag;
