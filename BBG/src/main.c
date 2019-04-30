@@ -48,14 +48,6 @@ void heartbeatTimerHandler () {
         pthread_cancel(uart);
     }
 
-    // if (controlHeartbeatFlag)
-    //     controlHeartbeatFlag = false;
-    // else {
-    //     enQueueForLog(PLAIN_MSG, ERROR, "Control loop thread is DEAD!! Issuing pthread_cancel().. ", NULL, NULL);
-    //     pthread_cancel(controlLoop);
-    // }
-
-
     if (logHeartbeatFlag)
         logHeartbeatFlag=false;
     else {
@@ -109,25 +101,6 @@ int main(int argc, char *argv[])
     logInit(logFile);
     initQueue(path);
 
-/*********************** Test ************************************/
-    CONTROL_RX_t rxControl;
-    CONTROL_TX_t txControl;
-
-    rxControl.blindsStatus = 4;
-    rxControl.lux = 1.00;
-    rxControl.proximity = 2;
-    rxControl.sensorStatus = 3;
-
-    txControl.light = 5;
-    txControl.motor = 6;
-
-    // enQueueForLog(PLAIN_MSG, INFO, "HELLO WORLD", NULL, NULL);
-    // enQueueForLog(PLAIN_MSG, ERROR, "HELLO WORLD", NULL, NULL);
-    // enQueueForLog(PLAIN_MSG, WARN, "HELLO WORLD", NULL, NULL);
-    enQueueForLog(CONTROL_RX, INFO, "CONTROL RX", &rxControl, NULL);
-    enQueueForLog(CONTROL_TX, INFO, "CONTROL TX", NULL, &txControl);
-/*****************************************************************/
-
     //Register the signal handler for the termination signal (SIGINT) from the user
     struct sigaction sa;
 	sigemptyset (&sa.sa_mask);
@@ -140,7 +113,7 @@ int main(int argc, char *argv[])
     gpio_export(USR_LED1);
     gpio_set_dir(USR_LED1, OUTPUT_PIN);
 
-/*********************** Test ************************************/
+/*********************** Startup of Project ************************************/
     gpio_set_value(USR_LED0, 1);
     gpio_set_value(USR_LED1, 1);
     usleep(5000000);
