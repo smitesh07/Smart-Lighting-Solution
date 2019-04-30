@@ -48,8 +48,8 @@ static void gpioInit(void) {
     {
     }
 
-    GPIOPinTypeGPIOOutput(GPIO_PORTL_BASE, GPIO_PIN_2);
-    GPIOPadConfigSet(GPIO_PORTL_BASE,GPIO_PIN_2,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPD);
+    GPIOPinTypeGPIOOutput(GPIO_PORTL_BASE, GPIO_PIN_2|GPIO_PIN_3);
+    GPIOPadConfigSet(GPIO_PORTL_BASE,GPIO_PIN_2|GPIO_PIN_3,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPD);
 }
 
 //*****************************************************************************
@@ -65,17 +65,24 @@ void motorTask( void *pvParameters ) {
         xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
         if (dataIn.motorControl==MOTOR_CLOSE) {
             dataOut.blindsStatus= MOTOR_CLOSE;
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, GPIO_PIN_2);
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_3, ~GPIO_PIN_3);
+            /* Calculated as 5 * SysCtlClockGet() / 3 for 5 seconds of delay */
+            SysCtlDelay(400000000);
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, ~GPIO_PIN_2);
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_3, ~GPIO_PIN_3);
         }
         else if (dataIn.motorControl==MOTOR_OPEN) {
             dataOut.blindsStatus= MOTOR_OPEN;
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, ~GPIO_PIN_2);
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_3, GPIO_PIN_3);
+            /* Calculated as 5 * SysCtlClockGet() / 3 for 5 seconds of delay */
+            SysCtlDelay(400000000);
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, ~GPIO_PIN_2);
+            GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_3, ~GPIO_PIN_3);
         }
         xSemaphoreGive(UARTTxDataSem);
         xSemaphoreGive(UARTRxDataSem);
-
-        GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, GPIO_PIN_2);
-        /* Calculated as 5 * SysCtlClockGet() / 3 for 5 seconds of delay */
-        SysCtlDelay(400000000);
-        GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, ~GPIO_PIN_2);
     }
 
 }
