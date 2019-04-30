@@ -13,8 +13,10 @@ and run the following command:
    make PLATFORM=BBG 
    
    
-   References: 
+   References:  
    http://embedded-basics.blogspot.com/2014/11/executing-program-on-bootup.html
    http://tinkernow.com/2015/01/beaglebone-black-rs232-uart-setup/
    https://class.ece.uw.edu/474/peckol/code/BeagleBone/ForestExamples/Example_6_UART/uart.c
+   https://sites.google.com/site/luiselectronicprojects/tutorials/tiva-tutorials/tiva-general-purpose-timers/timer-pwm---rgb-led
+   https://sites.google.com/site/luiselectronicprojects/tutorials/tiva-tutorials/tiva-general-purpose-timers/timer-periodic-mode---srf04
 
