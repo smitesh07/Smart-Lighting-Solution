@@ -246,18 +246,6 @@ main(void)
     }
 
     //
-    // Create the alert task.
-    //
-    //    if(AlertTaskInit() != 0)
-    //    {
-    //
-    //        while(1)
-    //        {
-    //        }
-    //    }
-
-
-    //
     // Start the scheduler.  This should not return.
     //
     vTaskStartScheduler();
