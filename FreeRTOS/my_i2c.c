@@ -49,8 +49,9 @@ void I2CInit(void) {
     ROM_IntMasterEnable();
 }
 
-void I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data)
+int I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data)
 {
+    unsigned int count = 0;
    //
    // Tell the master module what address it will place on the bus when
    // communicating with the slave.  Set the address to TEMP_SENSOR
@@ -75,13 +76,26 @@ void I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data)
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE) && count < TIMEOUT){
+       count ++;
+   }
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 #endif
 
    /*
    ** now wait for it to be non-busy
    */
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT){
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+          count = 0;
+          return -1;
+   }
 
    //
    // Place the data to be sent in the data register
@@ -97,17 +111,33 @@ void I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data)
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE)  && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 #endif
    //
    // Wait until master module is done
    //
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
 
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
+
+   return 0;
 }
 
 uint8_t I2CGetByte(uint8_t target_address, uint8_t register_address)
 {
+    unsigned int count = 0;
    //
    // Tell the master module what address it will place on the bus when
    // communicating with the slave.  Set the address to TEMP_SENSOR
@@ -134,13 +164,27 @@ uint8_t I2CGetByte(uint8_t target_address, uint8_t register_address)
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return 255;
+   }
 #endif
 
    //
    // Wait until master module is done
    //
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return 255;
+   }
 
    /*
    ** now switch to read mode
@@ -156,20 +200,35 @@ uint8_t I2CGetByte(uint8_t target_address, uint8_t register_address)
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return 255;
+   }
 #endif
 
    //
    // Wait until master module is done
    //
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return 255;
+   }
 
    return I2CMasterDataGet(I2C2_BASE);
 }
 
 
-void I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf)
+int I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf)
 {
+    unsigned int count = 0;
    //
    // Tell the master module what address it will place on the bus when
    // communicating with the slave.  Set the address to TEMP_SENSOR
@@ -196,13 +255,27 @@ void I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 #endif
 
    //
    // Wait until master module is done
    //
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 
    /*
    ** now switch to read mode
@@ -218,13 +291,27 @@ void I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 #endif
 
    //
    // Wait until master module is done
    //
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 
    uint32_t data_one = I2CMasterDataGet(I2C2_BASE);
 
@@ -237,18 +324,34 @@ void I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf
    //
    // Wait until master module is says it's busy. Errata I2C#08
    //
-   while(!I2CMasterBusy(I2C2_BASE));
+   while(!I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 #endif
 
    //
    // Wait until master module is done
    //
-   while(I2CMasterBusy(I2C2_BASE));
+   while(I2CMasterBusy(I2C2_BASE) && count < TIMEOUT) {
+       count ++;
+   }
+
+   if (count > TIMEOUT) {
+       count = 0;
+       return -1;
+   }
 
    uint32_t data_two = I2CMasterDataGet(I2C2_BASE);
 
    buf[0] = data_one;
    buf[1] = data_two;
+
+   return 0;
 }
 
 

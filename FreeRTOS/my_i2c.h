@@ -19,10 +19,11 @@
 #include "inc/hw_memmap.h"
 
 #define BUSY_WAIT 1
+#define TIMEOUT   40000
 
 void I2CInit(void);
-void I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data);
+int I2CSendByte(uint8_t target_address, uint8_t register_address, uint8_t data);
 uint8_t I2CGetByte(uint8_t target_address, uint8_t register_address);
-void I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf);
+int I2CGet2Bytes(uint8_t target_address, uint8_t register_address, uint8_t *buf);
 
 #endif /* MY_I2C_H_ */
