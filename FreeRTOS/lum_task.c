@@ -12,9 +12,11 @@
 // The stack size for the Luminosity sensor task.
 //
 //*****************************************************************************
-#define LUMTASKSTACKSIZE        128         // Stack size in words
+#define LUMTASKSTACKSIZE    128         // Stack size in words
 
-#define PRIORITY_LUM_TASK       4
+#define PRIORITY_LUM_TASK   4
+
+#define LUM_TASK_PERIOD     5000        //in ms
 
 //****************************************************************************
 //
@@ -37,7 +39,7 @@ extern sensorTx dataOut;
  instance.  The callback function does nothing but pass on the semaphore to the waiting task */
  void vLumTimerCallback( TimerHandle_t xTimer )
  {
-     UARTprintf("Interrupt Giving Lum Semaphore\n");
+//     UARTprintf("Interrupt Giving Lum Semaphore\n");
      xSemaphoreGive(xSemaphoreLum);
  }
 
@@ -53,7 +55,7 @@ static void enableTaskTimer(void) {
                          "Timer",
                          /* The timer period in ticks, must be
                          greater than 0. */
-                         pdMS_TO_TICKS(1000),
+                         pdMS_TO_TICKS(LUM_TASK_PERIOD),
                          /* The timers will auto-reload themselves
                          when they expire. */
                          pdTRUE,

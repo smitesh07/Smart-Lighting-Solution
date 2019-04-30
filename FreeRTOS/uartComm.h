@@ -46,6 +46,8 @@ extern xSemaphoreHandle UARTTxDataSem;
 extern sensorTx dataOut;
 extern sensorRx dataIn;
 
+extern uint8_t UARTConnectionStatus;
+
 
 /**
  * Prototypes

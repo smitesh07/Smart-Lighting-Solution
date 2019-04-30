@@ -59,6 +59,7 @@ static void gpioInit(void) {
 //*****************************************************************************
 void motorTask( void *pvParameters ) {
     while (1) {
+        //Wait for a notification signal from the UART task that some actuation is required
         ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
 
         xSemaphoreTake(UARTRxDataSem, portMAX_DELAY);
