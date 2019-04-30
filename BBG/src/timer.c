@@ -37,10 +37,7 @@ timer_t initTimer(uint64_t nanosec, void (*callbackFunction)() ) {
 	}
 
 	sev.sigev_notify = SIGEV_SIGNAL;
-	// sev.sigev_notify = SIGEV_THREAD_ID;
 	sev.sigev_signo = SIGRTMIN + signalCount;
-	// sev.sigev_value.sival_ptr = &timerid;
-    // sev.sigev_notify_thread_id = threadID;
 
 	if(timer_create(CLOCK_REALTIME, &sev, &timerid)) {
 		perror("\ntimer_create");

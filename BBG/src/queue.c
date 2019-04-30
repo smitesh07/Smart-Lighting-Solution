@@ -84,78 +84,74 @@ void deQueueFromLog(void) {
     QUEUE_t *prioQueue;
     prioQueue = (QUEUE_t *)malloc(sizeof(QUEUE_t));
     LOG_LEVEL_t prio;
-    // printf("Current messages %d", attr.mq_curmsgs);
-    // if (attr.mq_curmsgs > 0) {
-        // printf("After");
-        // There are some messages on this queue....eat em
         
-        // First set the queue to not block any calls    
-        attr.mq_flags = O_NONBLOCK;
-        mq_setattr (mqdes, &attr, &old_attr);  
-            
-        // Now eat all of the messages
-        while (mq_receive (mqdes, (char *)prioQueue, sizeof(QUEUE_t), &prio) != -1) {
-            if(prioQueue->mtype == PLAIN_MSG) {
-                if((prioQueue->logQueue).level == ERROR)
-                    LOG_ERROR("%s",(prioQueue->logQueue).msg);
-                else if ((prioQueue->logQueue).level == WARN)
-                    LOG_WARN("%s",(prioQueue->logQueue).msg); 
-                else if ((prioQueue->logQueue).level == INFO)
-                    LOG_INFO("%s",(prioQueue->logQueue).msg);
-                else if ((prioQueue->logQueue).level == DEBUG)
-                    LOG_DEBUG("%s",(prioQueue->logQueue).msg);
-            } else if (prioQueue->mtype == CONTROL_RX) {
-                if((prioQueue->logQueue).level == ERROR)
-                    LOG_ERROR("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
-                    (prioQueue->logQueue).controlRx.proximity,
-                    (prioQueue->logQueue).controlRx.sensorStatus,
-                    (prioQueue->logQueue).controlRx.blindsStatus);
-                else if ((prioQueue->logQueue).level == WARN)
-                    LOG_WARN("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
-                    (prioQueue->logQueue).controlRx.proximity,
-                    (prioQueue->logQueue).controlRx.sensorStatus,
-                    (prioQueue->logQueue).controlRx.blindsStatus); 
-                else if ((prioQueue->logQueue).level == INFO)
-                    LOG_INFO("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
-                    (prioQueue->logQueue).controlRx.proximity,
-                    (prioQueue->logQueue).controlRx.sensorStatus,
-                    (prioQueue->logQueue).controlRx.blindsStatus);
-                else if ((prioQueue->logQueue).level == DEBUG)
-                    LOG_DEBUG("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
-                    (prioQueue->logQueue).controlRx.proximity,
-                    (prioQueue->logQueue).controlRx.sensorStatus,
-                    (prioQueue->logQueue).controlRx.blindsStatus);
+    // First set the queue to not block any calls    
+    attr.mq_flags = O_NONBLOCK;
+    mq_setattr (mqdes, &attr, &old_attr);  
+        
+    // Now eat all of the messages
+    while (mq_receive (mqdes, (char *)prioQueue, sizeof(QUEUE_t), &prio) != -1) {
+        if(prioQueue->mtype == PLAIN_MSG) {
+            if((prioQueue->logQueue).level == ERROR)
+                LOG_ERROR("%s",(prioQueue->logQueue).msg);
+            else if ((prioQueue->logQueue).level == WARN)
+                LOG_WARN("%s",(prioQueue->logQueue).msg); 
+            else if ((prioQueue->logQueue).level == INFO)
+                LOG_INFO("%s",(prioQueue->logQueue).msg);
+            else if ((prioQueue->logQueue).level == DEBUG)
+                LOG_DEBUG("%s",(prioQueue->logQueue).msg);
+        } else if (prioQueue->mtype == CONTROL_RX) {
+            if((prioQueue->logQueue).level == ERROR)
+                LOG_ERROR("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
+                (prioQueue->logQueue).controlRx.proximity,
+                (prioQueue->logQueue).controlRx.sensorStatus,
+                (prioQueue->logQueue).controlRx.blindsStatus);
+            else if ((prioQueue->logQueue).level == WARN)
+                LOG_WARN("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
+                (prioQueue->logQueue).controlRx.proximity,
+                (prioQueue->logQueue).controlRx.sensorStatus,
+                (prioQueue->logQueue).controlRx.blindsStatus); 
+            else if ((prioQueue->logQueue).level == INFO)
+                LOG_INFO("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
+                (prioQueue->logQueue).controlRx.proximity,
+                (prioQueue->logQueue).controlRx.sensorStatus,
+                (prioQueue->logQueue).controlRx.blindsStatus);
+            else if ((prioQueue->logQueue).level == DEBUG)
+                LOG_DEBUG("%s LUX: %f   Proximity: %d   Sensor Status: %d   Blind Status: %d   ",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlRx.lux,
+                (prioQueue->logQueue).controlRx.proximity,
+                (prioQueue->logQueue).controlRx.sensorStatus,
+                (prioQueue->logQueue).controlRx.blindsStatus);
 
-            } else if (prioQueue->mtype == CONTROL_TX) {
-                if((prioQueue->logQueue).level == ERROR)
-                    LOG_ERROR("%s Light control: %d   Motor control: %d",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
-                    (prioQueue->logQueue).controlTx.motor);
-                else if ((prioQueue->logQueue).level == WARN)
-                    LOG_WARN("%s Light control: %d   Motor control: %d",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
-                    (prioQueue->logQueue).controlTx.motor); 
-                else if ((prioQueue->logQueue).level == INFO)
-                    LOG_INFO("%s Light control: %d   Motor control: %d",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
-                    (prioQueue->logQueue).controlTx.motor);
-                else if ((prioQueue->logQueue).level == DEBUG)
-                    LOG_DEBUG("%s Light control: %d   Motor control: %d",
-                    (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
-                    (prioQueue->logQueue).controlTx.motor);
+        } else if (prioQueue->mtype == CONTROL_TX) {
+            if((prioQueue->logQueue).level == ERROR)
+                LOG_ERROR("%s Light control: %d   Motor control: %d",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
+                (prioQueue->logQueue).controlTx.motor);
+            else if ((prioQueue->logQueue).level == WARN)
+                LOG_WARN("%s Light control: %d   Motor control: %d",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
+                (prioQueue->logQueue).controlTx.motor); 
+            else if ((prioQueue->logQueue).level == INFO)
+                LOG_INFO("%s Light control: %d   Motor control: %d",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
+                (prioQueue->logQueue).controlTx.motor);
+            else if ((prioQueue->logQueue).level == DEBUG)
+                LOG_DEBUG("%s Light control: %d   Motor control: %d",
+                (prioQueue->logQueue).msg, (prioQueue->logQueue).controlTx.light,
+                (prioQueue->logQueue).controlTx.motor);
 
-            }
         }
+    }
 
         
-        fflush(filePtr);
-        
-        free(prioQueue);
-        
-        // Now restore the attributes
-        mq_setattr (mqdes, &old_attr, 0);
+    fflush(filePtr);
+    
+    free(prioQueue);
+    
+    // Now restore the attributes
+    mq_setattr (mqdes, &old_attr, 0);
 }
