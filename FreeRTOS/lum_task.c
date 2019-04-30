@@ -94,13 +94,19 @@ static void enableTaskTimer(void) {
 static void lumTask( void *pvParameters ) {
     int_fast32_t i32IntegerPart;
     int_fast32_t i32FractionPart;
+    static float lux = 0;
     while(1) {
         xSemaphoreTake(xSemaphoreLum, portMAX_DELAY);
         UARTprintf("Lum task initiated\n");
-        float lux = getLum();
+        lux = getLum();
+
+        if (lux == 0) {
+            // Initialize luminosity sensor
+            initLumSensor();
+        }
 
         xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
-        if (lux<0) {
+        if (lux<=0) {
             dataOut.sensorStatus = SENSOR_NOT_WORKING;
             dataOut.lux=0;
         }
