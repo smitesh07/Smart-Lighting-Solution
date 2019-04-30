@@ -46,9 +46,11 @@ void UART6_IntHandler (void) {
             ptr = (uint8_t *)&dataIn;
             UARTprintf("\nReceived Light Control: %d\tMotor Control: %d", dataIn.lightControl, dataIn.motorControl);
             if (dataIn.lightControl!=LIGHT_NO_CHANGE) {
+                UARTprintf("\nReceived Light Control of NO CHANGE");
                 xTaskNotifyGive(lightTaskHandle);
             }
             if (dataIn.motorControl!=MOTOR_NO_CHANGE) {
+                UARTprintf("\nReceived MOTOR Control of NO CHANGE");
                 xTaskNotifyGive(motorTaskHandle);
             }
         }
@@ -113,6 +115,8 @@ void uartTxRoutine (void * pvParameters) {
     while (1) {
         if( xSemaphoreTake( UARTTxSempahore, portMAX_DELAY ) == pdTRUE ) {
             xSemaphoreTake(UARTTxDataSem, portMAX_DELAY);
+            UARTprintf("\n Sending Data to BBG  Luminosity: %f Proximity: %dcm Sensor status: %d Blind status: %d",
+                       dataOut.lux, dataOut.proximity, dataOut.sensorStatus, dataOut.blindsStatus);
             ptr=(uint8_t *) &dataOut;
             for (i=0; i<sizeof(dataOut);i++) {
                 UARTCharPut(UART6_BASE, (uint8_t)*((uint8_t *)ptr));
