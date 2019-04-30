@@ -80,7 +80,7 @@ void UARTTransmissionTrigger (void) {
     //Pass the latest UART data received to the control function 
     sem_wait(sem_uart_rx_data);
     getCurrentAction (dataIn);
-    //TODO: Log the DataOut structure to be sent
+    enQueueForLog(CONTROL_TX, INFO, "Sending Data to BBG", NULL, &dataIn);
     sem_post(sem_uart_rx_data);
     tcflush(fd,TCOFLUSH);
     //getCurrentAction() updates the value of the global var dataOut
@@ -161,10 +161,7 @@ void *uartHandler(void *arg) {
           printf("\nUART Connection to the remote node is lost.");
           printf("\nInto DEGRADED mode II of operation.");
           printf("\nNo commands would be sent unless further sensor data is received.");
-          //TODO: Turn on the appropriate LED On the BBG
           gpio_set_value(USR_LED1, 1);
-          // usleep(5000000);
-          // gpio_set_value(USR_LED1, 0);
           enQueueForLog(PLAIN_MSG, ERROR, "UART Connection to the remote node is lost.", NULL, NULL);
           enQueueForLog(PLAIN_MSG, ERROR, "Into DEGRADED mode II of operation.", NULL, NULL);
           enQueueForLog(PLAIN_MSG, ERROR, "No commands would be sent unless further sensor data is received.", NULL, NULL);
