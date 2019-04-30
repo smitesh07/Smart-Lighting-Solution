@@ -5,7 +5,7 @@ To build the project on CCS, do the following steps:
 2) Resources -> Linked Resources
 3) Under Path Variables, change the value of SW_ROOT symbol
    to your TivaWare folder path. Also, change the value of
-   ORIGINAL_PROJECT_ROOT to CCS project of blinkly exammple
+   ORIGINAL_PROJECT_ROOT to CCS project of blinky example
    for board ek-tm4c1294xl under TivaWare folder
    
 To build the project on BBG, change the IP of BBG in Makefile
