@@ -23,7 +23,7 @@ sem_t * sem_uart_rx_data;
 #define UART_TRANSMISSION_INTERVAL 5
 #define UART_RECEPTION_INTERVAL 5
 
-#define UART_CONNECTION_TIMEOUT 20 //in seconds
+#define UART_CONNECTION_TIMEOUT 10 //in seconds
 
 //Heartbeat flag for the UART thread
 bool uartHeartbeatFlag;
@@ -96,19 +96,21 @@ void UARTTransmissionTrigger (void) {
  */
 void UARTReceptionTrigger (void) {
     sem_wait(sem_uart_rx_data);
-    read(fd, &dataIn, sizeof(CONTROL_RX_t));
-    if (newConnection==false) {
-      newConnection=true;
-      printf("\nUART Connection to the remote node is now established");
-      enQueueForLog(PLAIN_MSG, INFO, "UART Connection to the remote node is now established", NULL, NULL);
-    }
-    uartConnectedHeartBeatFlag = true;
-    if (dataIn.sensorStatus) {
-      printf("\n\nReceived data from the remote node.");
-      printf("\nLuminosity: %f", dataIn.lux);
-      printf("\nProximity: %s", dataIn.proximity ? "Detected" : "Not detected");
-      printf("\nBlinds: %s", dataIn.blindsStatus ? "Closed" : "Open" );
-      enQueueForLog(CONTROL_RX, INFO, "Received data from the remote node.", &dataIn, NULL);
+    if (read(fd, &dataIn, sizeof(CONTROL_RX_t)) ==sizeof(CONTROL_RX_t)) {
+      gpio_set_value(USR_LED1, 0);
+      if (newConnection==false) {
+        newConnection=true;
+        printf("\nUART Connection to the remote node is now established");
+        enQueueForLog(PLAIN_MSG, INFO, "UART Connection to the remote node is now established", NULL, NULL);
+      }
+      uartConnectedHeartBeatFlag = true;
+      if (dataIn.sensorStatus) {
+        printf("\n\nReceived data from the remote node.");
+        printf("\nLuminosity: %f", dataIn.lux);
+        printf("\nProximity: %s", dataIn.proximity ? "Detected" : "Not detected");
+        printf("\nBlinds: %s", dataIn.blindsStatus ? "Closed" : "Open" );
+        enQueueForLog(CONTROL_RX, INFO, "Received data from the remote node.", &dataIn, NULL);
+      }
     }
     sem_post(sem_uart_rx_data);
     tcflush(fd,TCIFLUSH);
@@ -161,8 +163,8 @@ void *uartHandler(void *arg) {
           printf("\nNo commands would be sent unless further sensor data is received.");
           //TODO: Turn on the appropriate LED On the BBG
           gpio_set_value(USR_LED1, 1);
-          usleep(5000000);
-          gpio_set_value(USR_LED1, 0);
+          // usleep(5000000);
+          // gpio_set_value(USR_LED1, 0);
           enQueueForLog(PLAIN_MSG, ERROR, "UART Connection to the remote node is lost.", NULL, NULL);
           enQueueForLog(PLAIN_MSG, ERROR, "Into DEGRADED mode II of operation.", NULL, NULL);
           enQueueForLog(PLAIN_MSG, ERROR, "No commands would be sent unless further sensor data is received.", NULL, NULL);

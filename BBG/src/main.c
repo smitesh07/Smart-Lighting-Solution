@@ -26,13 +26,13 @@
 #include "SimpleGPIO.h"
 
 
-#define HEARTBEAT_TIMEOUT 10 //in seconds
+#define HEARTBEAT_TIMEOUT 100 //in seconds
 #define FILENAME_MAX_LEN 50
 
 pthread_t logger, uart, controlLoop;
 
 //Global flag to be set by main on receiving the SIGINT signal
-bool terminateSignal= false;
+bool terminateSignal= 0;
 
 timer_t mainTimerid;
 

@@ -27,16 +27,16 @@ void getCurrentAction (CONTROL_RX_t rxData) {
     enQueueForLog(PLAIN_MSG, ERROR, "Into DEGRADED mode I of operation.", NULL, NULL);
     printf("\nCommand would be sent only to maintain default lighting condition.");
     enQueueForLog(PLAIN_MSG, ERROR, "Command would be sent only to maintain default lighting condition.", NULL, NULL);
-    // TODO: Turn on the appropriate LED on BBG
+    // Turn on LED 0
     gpio_set_value(USR_LED0, 1);
-    usleep(5000000);
-    gpio_set_value(USR_LED0, 0);
 
     dataOut.light = LIGHT_MAINTAIN_DEFAULT;
     dataOut.motor = MOTOR_NO_CHANGE;
   }
 
   else if(rxData.proximity == PROXIMITY_DETECTED) {
+
+    gpio_set_value(USR_LED0, 0);
 
     if(rxData.lux > LOW_LIGHT && rxData.lux < HIGH_LIGHT) {
       dataOut.light = LIGHT_NO_CHANGE;
@@ -69,6 +69,7 @@ void getCurrentAction (CONTROL_RX_t rxData) {
       dataOut.light = LIGHT_NO_CHANGE;
       dataOut.motor = MOTOR_NO_CHANGE;
       enQueueForLog(CONTROL_TX, INFO, "No proximity detected. No actuation required..", NULL, &dataOut);
+      gpio_set_value(USR_LED0, 0);
   }
 
 }
